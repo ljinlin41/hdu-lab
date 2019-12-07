@@ -27,7 +27,7 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public List<Member> getAllMembers() {
-        List<Member> all = null;
+        List<Member> all;
         try {
             all = memberDao.getAllMembers();
         } catch (Exception e) {
