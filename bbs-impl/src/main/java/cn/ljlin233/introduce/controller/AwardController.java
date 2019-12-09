@@ -48,9 +48,9 @@ public class AwardController {
 
         String title = request.getParameter("title");
         String content = request.getParameter("content");
-        Integer userId = userTokenService.getUserid(request.getHeader("token"));
+        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
 
-        awardService.addAward(title, content, userId);
+        awardService.addAward(title, content, 123);
     }
 
     // 获取所有奖项

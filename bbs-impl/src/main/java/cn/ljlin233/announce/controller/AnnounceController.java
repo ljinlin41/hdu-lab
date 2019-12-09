@@ -45,7 +45,6 @@ public class AnnounceController {
      * @param page 第N页
      * @return result
      */
-    @PreAuthorize("hasRole('student')")
     @GetMapping(value = "/announces", params = "page")
     public Page<Announce> getAnnouncesByPage(@RequestParam int page) {
 
@@ -60,6 +59,7 @@ public class AnnounceController {
      * @param id 通知Id
      * @return result
      */
+    @PreAuthorize("hasRole('student')")
     @GetMapping(value = "/announces", params = "id")
     public Announce getAnnounceById(@RequestParam int id) {
         Announce announce = announceService.getAnnounceById(id);
@@ -85,6 +85,7 @@ public class AnnounceController {
      *
      * @param request request
      */
+    @PreAuthorize("hasRole('teacher')")
     @PostMapping(value = "/announces")
     public void addAnnounce(@RequestBody InsertAnnounceRequestDto request) {
 
@@ -97,6 +98,7 @@ public class AnnounceController {
      * @param id 通知id
      * @param request request
      */
+    @PreAuthorize("hasRole('teacher')")
     @PutMapping(value = "/announces", params = "id")
     public void updateAnnounce(@RequestParam int id, @RequestBody UpdateAnnounceRequestDto request) {
 
@@ -108,6 +110,7 @@ public class AnnounceController {
      *
      * @param id 通知Id
      */
+    @PreAuthorize("hasRole('teacher')")
     @DeleteMapping(value = "/announces", params = "id")
     public void deleteAnnounce(@RequestParam int id) {
         announceService.deleteAnnounce(id);

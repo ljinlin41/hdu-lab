@@ -48,9 +48,9 @@ public class JobController {
 
         String title = request.getParameter("title");
         String content = request.getParameter("content");
-        Integer userId = userTokenService.getUserid(request.getHeader("token"));
+        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
 
-        jobService.addJob(title, content, userId);
+        jobService.addJob(title, content, 123);
 
     }
 

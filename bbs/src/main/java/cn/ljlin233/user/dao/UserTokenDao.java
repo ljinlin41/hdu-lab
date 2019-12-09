@@ -1,5 +1,7 @@
 package cn.ljlin233.user.dao;
 
+import cn.ljlin233.user.entity.UserToken;
+
 /**
  * UserTokenDao
  *
@@ -11,17 +13,17 @@ public interface UserTokenDao {
      * 添加一个token
      *
      * @param token token
-     * @param userId 用户Id
+     * @param userToken userToken
      */
-    void addToken(String token, String userId);
+    void addToken(String token, UserToken userToken);
 
     /**
-     * 根据token获取用户Id
+     * 根据token获取UserToken
      *
      * @param token token
-     * @return 用户Id
+     * @return UserToken
      */
-    String getUserId(String token);
+    UserToken getUserToken(String token);
 
     /**
      * 删除token

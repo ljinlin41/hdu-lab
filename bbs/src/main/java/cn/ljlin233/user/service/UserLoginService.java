@@ -1,5 +1,6 @@
 package cn.ljlin233.user.service;
 
+import cn.ljlin233.user.dto.UserLoginRequestDto;
 import cn.ljlin233.user.entity.UserToken;
 
 /**
@@ -12,10 +13,9 @@ public interface UserLoginService {
     /**
      * 用户登录
      *
-     * @param identifier 账号
-     * @param credential 密码
+     * @param request 请求
      * @return token
      */
-    UserToken userLogin(String identifier, String credential);
+    UserToken userLogin(UserLoginRequestDto request);
 
 }

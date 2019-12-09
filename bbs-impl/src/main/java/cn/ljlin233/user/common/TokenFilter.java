@@ -9,13 +9,16 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cn.ljlin233.user.dto.SecurityUserDto;
+import cn.ljlin233.user.dao.UserTokenDao;
+import cn.ljlin233.user.entity.UserToken;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,24 +29,34 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
+    @Autowired
+    private UserTokenDao userTokenDao;
+
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
 
         String token = request.getHeader("token");
+
         if (token != null) {
 
-            List<SimpleGrantedAuthority> simpleGrantedAuthorityList = new ArrayList<>();
-            simpleGrantedAuthorityList.add(new SimpleGrantedAuthority("ROLE_student"));
+            UserToken userToken = userTokenDao.getUserToken(token);
 
-            SecurityUserDto securityUserDto = new SecurityUserDto("1", "202cb962ac59075b964b07152d234b70",
-                simpleGrantedAuthorityList);
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                securityUserDto, securityUserDto.getPassword(), securityUserDto.getAuthorities());
+            if (userToken != null) {
 
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                List<SimpleGrantedAuthority> simpleGrantedAuthorityList = userToken.getRole().stream().collect(
+                    ArrayList::new, (list, role) -> list.add(new SimpleGrantedAuthority("ROLE_" + role)),
+                    ArrayList::addAll);
 
-            log.info("enter token filter");
+                User user = new User("1", "", simpleGrantedAuthorityList);
+
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user,
+                    "", simpleGrantedAuthorityList);
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+
+            }
 
         }
 

@@ -1,8 +1,11 @@
 package cn.ljlin233.user.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import cn.ljlin233.user.dao.UserTokenDao;
+import cn.ljlin233.user.entity.UserToken;
 
 /**
  * @author lvjinlin42@foxmail.com
@@ -10,14 +13,21 @@ import cn.ljlin233.user.dao.UserTokenDao;
  */
 @Repository
 public class UserTokenDaoImpl implements UserTokenDao {
-    @Override
-    public void addToken(String token, String userId) {
 
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    public void addToken(String token, UserToken userToken) {
+        redisTemplate.opsForValue().set(token, userToken);
     }
 
     @Override
-    public String getUserId(String token) {
-        return null;
+    public UserToken getUserToken(String token) {
+
+        Object object = redisTemplate.opsForValue().get(token);
+
+        return (UserToken) object;
     }
 
     @Override

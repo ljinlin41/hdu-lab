@@ -1,5 +1,7 @@
 package cn.ljlin233.user.service;
 
+import cn.ljlin233.user.entity.UserToken;
+
 /**
  * UserTokenService
  *
@@ -10,10 +12,10 @@ public interface UserTokenService {
     /**
      * 添加token
      *
-     * @param userId 用户Id
+     * @param userToken token
      * @return token
      */
-    String addToken(int userId);
+    void addToken(UserToken userToken);
 
     /**
      * 删除token
@@ -30,11 +32,4 @@ public interface UserTokenService {
      */
     boolean checkRefreshToken(String token);
 
-    /**
-     * 根据token获取用户Id
-     *
-     * @param token token
-     * @return 用户id
-     */
-    Integer getUserid(String token);
 }

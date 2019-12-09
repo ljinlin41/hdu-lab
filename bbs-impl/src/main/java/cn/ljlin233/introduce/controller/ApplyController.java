@@ -80,9 +80,9 @@ public class ApplyController {
     @RequestMapping(value = "/applys/unhandle", method = RequestMethod.GET)
     @ResponseBody
     public List<Apply> getUnhandleApply(HttpServletRequest request) {
-        Integer userId = userTokenService.getUserid(request.getHeader("token"));
+        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
 
-        List<Apply> applies = applyService.getUnhandleApply(userId);
+        List<Apply> applies = applyService.getUnhandleApply(123);
 
         return applies;
     }

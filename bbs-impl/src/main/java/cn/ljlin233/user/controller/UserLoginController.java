@@ -1,39 +1,30 @@
 package cn.ljlin233.user.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.user.dto.UserLoginRequestDto;
 import cn.ljlin233.user.entity.UserToken;
 import cn.ljlin233.user.service.UserLoginService;
 
 /**
+ * @author lvjinlin42@foxmail.com
  * UserLoginController
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class UserLoginController {
 
+    @Autowired
     private UserLoginService userLoginService;
 
-    public UserLoginController() {}
+    @PostMapping(value = "/login")
+    public UserToken loginUser(@RequestBody UserLoginRequestDto request) {
 
-    @Autowired
-    public UserLoginController(UserLoginService userLoginService) {
-        this.userLoginService = userLoginService;
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    @ResponseBody
-    public UserToken loginUser(HttpServletRequest request) {
-        String identifier = request.getParameter("identifier");
-        String credential = request.getParameter("credential");
-
-        UserToken userToken = userLoginService.userLogin(identifier, credential);
+        UserToken userToken = userLoginService.userLogin(request);
 
         return userToken;
     }
