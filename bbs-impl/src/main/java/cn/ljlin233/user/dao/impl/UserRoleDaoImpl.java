@@ -2,9 +2,12 @@ package cn.ljlin233.user.dao.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.ljlin233.user.dao.UserRoleDao;
+import cn.ljlin233.user.dao.mapper.UserRoleMapper;
+import cn.ljlin233.user.entity.UserRole;
 
 /**
  * @author lvjinlin42@foxmail.com
@@ -12,6 +15,10 @@ import cn.ljlin233.user.dao.UserRoleDao;
  */
 @Repository
 public class UserRoleDaoImpl implements UserRoleDao {
+
+    @Autowired
+    private UserRoleMapper userRoleMapper;
+
     @Override
     public void addUserRole(int userId, String role) {
 
@@ -23,7 +30,12 @@ public class UserRoleDaoImpl implements UserRoleDao {
     }
 
     @Override
-    public List<String> getUserRoleByUserId(int userId) {
-        return null;
+    public List<UserRole> getUserRoleByUserId(int userId) {
+
+        UserRole userRole = UserRole.builder().userId(userId).build();
+
+        List<UserRole> userRoleList = userRoleMapper.select(userRole);
+
+        return userRoleList;
     }
 }

@@ -5,12 +5,15 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.InsertAchievementRequestDto;
 import cn.ljlin233.introduce.entity.Achievement;
 import cn.ljlin233.introduce.entity.AchievementResponse;
 import cn.ljlin233.introduce.service.AchievementService;
@@ -22,8 +25,9 @@ import cn.ljlin233.util.auth.TeacherAuth;
 
 /**
  * AchievementController
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class AchievementController {
 
@@ -33,20 +37,19 @@ public class AchievementController {
     @Autowired
     private UserTokenService userTokenService;
 
-    public AchievementController() {}
 
     // 增加一个资源
     @TeacherAuth
     @AdminAuth
     @RootAuth
-    @RequestMapping(value = "/achievements", method = RequestMethod.POST)
-    public void addAchievement(HttpServletRequest request) {
+    @PostMapping(value = "/achievements")
+    public void addAchievement(@RequestBody InsertAchievementRequestDto request) {
 
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
-        Integer userId = userTokenService.getUserid(request.getHeader("token"));
-
-        achievementService.addAchievement(title, content, userId);
+        // String title = request.getParameter("title");
+        // String content = request.getParameter("content");
+        // Integer userId = userTokenService.getUserid(request.getHeader("token"));
+        //
+        // achievementService.addAchievement(title, content, userId);
 
     }
 

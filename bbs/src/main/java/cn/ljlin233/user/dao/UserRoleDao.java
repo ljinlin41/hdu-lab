@@ -2,6 +2,8 @@ package cn.ljlin233.user.dao;
 
 import java.util.List;
 
+import cn.ljlin233.user.entity.UserRole;
+
 /**
  * UserRoleDao
  *
@@ -31,6 +33,6 @@ public interface UserRoleDao {
      * @param userId 用户Id
      * @return 角色列表
      */
-    List<String> getUserRoleByUserId(int userId);
+    List<UserRole> getUserRoleByUserId(int userId);
 
 }

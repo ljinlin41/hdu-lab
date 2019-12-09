@@ -1,6 +1,7 @@
 package cn.ljlin233.announce.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,7 +19,6 @@ import cn.ljlin233.util.Page;
 
 /**
  * AnnounceController
- *
  * @author lvjinlin42@foxmail.com
  */
 @RestController
@@ -45,6 +45,7 @@ public class AnnounceController {
      * @param page 第N页
      * @return result
      */
+    @PreAuthorize("hasRole('student')")
     @GetMapping(value = "/announces", params = "page")
     public Page<Announce> getAnnouncesByPage(@RequestParam int page) {
 

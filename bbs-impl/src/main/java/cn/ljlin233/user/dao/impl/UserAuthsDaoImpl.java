@@ -1,8 +1,10 @@
 package cn.ljlin233.user.dao.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.ljlin233.user.dao.UserAuthsDao;
+import cn.ljlin233.user.dao.mapper.UserAuthsMapper;
 import cn.ljlin233.user.entity.UserAuths;
 
 /**
@@ -11,6 +13,10 @@ import cn.ljlin233.user.entity.UserAuths;
  */
 @Repository
 public class UserAuthsDaoImpl implements UserAuthsDao {
+
+    @Autowired
+    private UserAuthsMapper userAuthsMapper;
+
     @Override
     public void addUserAuths(int userId, String identityType, String identifier, String credential) {
 
@@ -23,6 +29,11 @@ public class UserAuthsDaoImpl implements UserAuthsDao {
 
     @Override
     public UserAuths getUserAuthsByidentifier(String identifier) {
-        return null;
+
+        UserAuths userAuths = UserAuths.builder().identifier(identifier).build();
+
+        userAuths = userAuthsMapper.selectOne(userAuths);
+
+        return userAuths;
     }
 }

@@ -15,6 +15,7 @@ import cn.ljlin233.util.exception.entity.DataCheckedException;
 import cn.ljlin233.util.exception.entity.ExceptionResponse;
 import cn.ljlin233.util.exception.entity.QueryException;
 import cn.ljlin233.util.exception.entity.SystemException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * GlobalExceptionController
@@ -22,6 +23,7 @@ import cn.ljlin233.util.exception.entity.SystemException;
  * @author lvjinlin42@foxmail.com
  */
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionController extends DispatcherServlet {
 
     private static final long serialVersionUID = 5449367539552766714L;
@@ -68,15 +70,15 @@ public class GlobalExceptionController extends DispatcherServlet {
         return exceptionResponse;
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    public ExceptionResponse handleAllException(Exception ex) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse();
-        exceptionResponse.setCode("500");
-        exceptionResponse.setMessage("服务器内部错误");
-        exceptionResponse.setError(ex.getMessage());
-        ex.printStackTrace();
-        return exceptionResponse;
-    }
+    // @ExceptionHandler(Exception.class)
+    // @ResponseBody
+    // public ExceptionResponse handleAllException(Exception ex) {
+    //     ExceptionResponse exceptionResponse = new ExceptionResponse();
+    //     exceptionResponse.setCode("500");
+    //     exceptionResponse.setMessage("服务器内部错误");
+    //     exceptionResponse.setError(ex.getMessage());
+    //     //ex.printStackTrace();
+    //     return exceptionResponse;
+    // }
 
 }

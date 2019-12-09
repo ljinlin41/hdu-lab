@@ -1,7 +1,5 @@
 package cn.ljlin233.user.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -57,8 +55,8 @@ public class UserLoginServiceImpl implements UserLoginService {
         String token = userTokenService.addToken(userId);
         userToken.setToken(token);
         // 获取并存储role
-        List<String> role = userRoleDao.getUserRoleByUserId(userId);
-        userToken.setUserRole(role);
+        //List<String> role = userRoleDao.getUserRoleByUserId(userId);
+        //userToken.setUserRole(role);
 
         return userToken;
     }
