@@ -4,18 +4,16 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Achievement 成果
  *
  * @author lvjinlin42@foxmail.com
  */
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
+@Builder
 @Table(name = "intro_achievement")
 public class Achievement {
 

@@ -1,8 +1,7 @@
 package cn.ljlin233.introduce.dao;
 
-import java.util.List;
-
 import cn.ljlin233.introduce.entity.Achievement;
+import cn.ljlin233.util.Page;
 
 /**
  * AchievementDao
@@ -23,7 +22,7 @@ public interface AchievementDao {
      *
      * @return 成果列表
      */
-    List<Achievement> getAllAchievements();
+    Page<Achievement> getAllAchievements();
 
     /**
      * 按页获取成果
@@ -32,7 +31,7 @@ public interface AchievementDao {
      * @param pageSize 没页大小
      * @return 成果列表
      */
-    List<Achievement> getAchievementsPage(int pageNum, int pageSize);
+    Page<Achievement> getAchievementsPage(int pageNum, int pageSize);
 
     /**
      * 根据Id获取成果信息
@@ -43,20 +42,6 @@ public interface AchievementDao {
     Achievement getAchievementById(int id);
 
     /**
-     * 增加一个成果的访问数
-     *
-     * @param id 成果Id
-     */
-    void addVisitCount(int id);
-
-    /**
-     * 获取成果总数
-     *
-     * @return 成果总数
-     */
-    int getAchievementCount();
-
-    /**
      * 按标题搜索成果
      *
      * @param keywords 标题
@@ -64,15 +49,7 @@ public interface AchievementDao {
      * @param pageSize 每页大小
      * @return 搜索结果
      */
-    List<Achievement> searchAchievements(String keywords, int pageNum, int pageSize);
-
-    /**
-     * 获取搜索结果数量
-     *
-     * @param keywords 搜索标题
-     * @return 结果数量
-     */
-    int getSearchCount(String keywords);
+    Page<Achievement> searchAchievements(String keywords, int pageNum, int pageSize);
 
     /**
      * 更新一个成果

@@ -11,8 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import cn.ljlin233.announce.dao.AnnounceDao;
 import cn.ljlin233.announce.entity.Announce;
 import cn.ljlin233.bbs.BbsApplication;
-import cn.ljlin233.util.DateUtil;
 import cn.ljlin233.util.Page;
+import cn.ljlin233.util.common.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**

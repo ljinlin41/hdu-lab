@@ -1,5 +1,6 @@
-package cn.ljlin233.util;
+package cn.ljlin233.util.common;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
@@ -20,4 +21,8 @@ public class DateUtil {
         return DateUtilHolder.INSTANCE;
     }
 
+    public static String getNow() {
+
+        return getInstance().format(LocalDateTime.now());
+    }
 }

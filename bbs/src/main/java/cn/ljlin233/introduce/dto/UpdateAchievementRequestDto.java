@@ -5,20 +5,13 @@ import lombok.Data;
 
 /**
  * @author lvjinlin42@foxmail.com
- * @date 2019/12/8 15:20
+ * @date 2019/12/11 20:30
  */
 @Data
 @Builder
-public class InsertAchievementRequestDto {
+public class UpdateAchievementRequestDto {
 
-    /**
-     * 标题
-     */
     private String title;
 
-    /**
-     * 正文
-     */
     private String content;
-
 }

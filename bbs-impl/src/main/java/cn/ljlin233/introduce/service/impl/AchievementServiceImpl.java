@@ -1,75 +1,48 @@
 package cn.ljlin233.introduce.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ljlin233.introduce.dao.AchievementDao;
+import cn.ljlin233.introduce.dto.InsertAchievementRequestDto;
+import cn.ljlin233.introduce.dto.UpdateAchievementRequestDto;
 import cn.ljlin233.introduce.entity.Achievement;
 import cn.ljlin233.introduce.service.AchievementService;
-import cn.ljlin233.user.entity.UserInfo;
-import cn.ljlin233.user.service.UserInfoService;
-import cn.ljlin233.util.exception.entity.DataCheckedException;
+import cn.ljlin233.util.Page;
+import cn.ljlin233.util.common.DateUtil;
+import cn.ljlin233.util.common.UserContext;
+import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * AchievementServiceImpl
+ * @author lvjinlin42@foxmail.com
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class AchievementServiceImpl implements AchievementService {
 
-    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    @Autowired
     private AchievementDao achievementDao;
 
-    private UserInfoService userInfoService;
+    @Override
+    public void addAchievement(InsertAchievementRequestDto request) {
 
-    public AchievementServiceImpl() {
-    }
+        UserContext userContext = UserContextUtil.getUserContext();
 
-    @Autowired
-    public AchievementServiceImpl(AchievementDao achievementDao, UserInfoService userInfoService) {
-        this.achievementDao = achievementDao;
-        this.userInfoService = userInfoService;
+        int upId = userContext.getId();
+        String nickName = userContext.getNickName();
+
+        Achievement achievement = Achievement.builder().upUserId(upId).title(request.getTitle()).content(
+            request.getContent()).upDate(DateUtil.getNow()).upNickname(nickName).build();
+
+        achievementDao.addAchievement(achievement);
     }
 
     @Override
-    public void addAchievement(String title, String content, Integer userId) {
-
-        if (title == null || title.length() == 0) {
-            throw new DataCheckedException("标题不能为空!");
-        }
-        if (content == null || content.length() == 0) {
-            throw new DataCheckedException("内容不能为空!");
-        }
-        UserInfo userInfo = userInfoService.getUserInfo(userId);
-        if (userId == null) {
-            throw new DataCheckedException("账号不存在!");
-        }
-
-        Achievement achievement = new Achievement();
-        achievement.setTitle(title);
-        achievement.setContent(content);
-        achievement.setUpUserId(userId);
-        achievement.setUpNickname(userInfo.getNickname());
-        String upDate = dateformat.format(new Date());
-        achievement.setUpDate(upDate);
-        try {
-            achievementDao.addAchievement(achievement);
-        } catch (Exception e) {
-            throw new SystemException("服务器存储文章失败", e.getMessage());
-        }
-
-    }
-
-    @Override
-    public List<Achievement> getAllAchievements() {
-        List<Achievement> all = null;
+    public Page<Achievement> getAllAchievements() {
+        Page<Achievement> all;
         try {
             all = achievementDao.getAllAchievements();
         } catch (Exception e) {
@@ -79,11 +52,10 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<Achievement> getAchievementsPage(int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Achievement> result = null;
+    public Page<Achievement> getAchievementsPage(int pageNum, int pageSize) {
+        Page<Achievement> result;
         try {
-            result = achievementDao.getAchievementsPage(start, pageNum);
+            result = achievementDao.getAchievementsPage(pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("服务器获取研究成果失败!", e.getMessage());
         }
@@ -92,11 +64,11 @@ public class AchievementServiceImpl implements AchievementService {
     }
 
     @Override
-    public List<Achievement> searchAchievements(String keywords, int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Achievement> result = null;
+    public Page<Achievement> searchAchievements(String keywords, int pageNum, int pageSize) {
+
+        Page<Achievement> result;
         try {
-            result = achievementDao.searchAchievements(keywords, start, pageNum);
+            result = achievementDao.searchAchievements(keywords, pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("服务器搜索研究成果失败!", e.getMessage());
         }
@@ -106,52 +78,25 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public Achievement getAchievementById(int id) {
-        Achievement result = null;
+        Achievement result;
         try {
             result = achievementDao.getAchievementById(id);
         } catch (Exception e) {
             throw new SystemException("服务器获取研究成果失败!", e.getMessage());
         }
         // 访问次数+1
-        addVisitCount(id);
+        addVisitCount(result);
 
         return result;
     }
 
-    @Override
-    public void addVisitCount(int id) {
-        try {
-            achievementDao.addVisitCount(id);
-        } catch (Exception e) {
-            throw new SystemException("研究成果访问数错误!", e.getMessage());
-        }
-    }
 
     @Override
-    public int getAchievementCount() {
-        int count = 0;
+    public void updateAchievement(int id, UpdateAchievementRequestDto request) {
         try {
-            count = achievementDao.getAchievementCount();
-        } catch (Exception e) {
-            throw new SystemException("读取研究成果数量错误!", e.getMessage());
-        }
-        return count;
-    }
+            Achievement achievement = Achievement.builder().id(id).title(request.getTitle()).content(
+                request.getContent()).build();
 
-    @Override
-    public int getSearchCount(String keywords) {
-        int count = 0;
-        try {
-            count = achievementDao.getSearchCount(keywords);
-        } catch (Exception e) {
-            throw new SystemException("读取研究成果搜索数量错误!", e.getMessage());
-        }
-        return count;
-    }
-
-    @Override
-    public void updateAchievement(Achievement achievement) {
-        try {
             achievementDao.updateAchievement(achievement);
         } catch (Exception e) {
             throw new SystemException("更新研究成果失败!", e.getMessage());
@@ -166,4 +111,16 @@ public class AchievementServiceImpl implements AchievementService {
             throw new SystemException("删除研究成果失败!", e.getMessage());
         }
     }
+
+    private void addVisitCount(Achievement achievement) {
+        try {
+            Achievement newAchievement = Achievement.builder().id(achievement.getId()).visitCount(
+                achievement.getVisitCount() + 1).build();
+
+            achievementDao.updateAchievement(newAchievement);
+        } catch (Exception e) {
+            throw new SystemException("研究成果访问数错误!", e.getMessage());
+        }
+    }
+
 }

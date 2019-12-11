@@ -1,27 +1,21 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.ljlin233.introduce.dto.InsertAchievementRequestDto;
+import cn.ljlin233.introduce.dto.UpdateAchievementRequestDto;
 import cn.ljlin233.introduce.entity.Achievement;
-import cn.ljlin233.introduce.entity.AchievementResponse;
 import cn.ljlin233.introduce.service.AchievementService;
-import cn.ljlin233.user.service.UserTokenService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.MyselfAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
  * AchievementController
@@ -34,84 +28,81 @@ public class AchievementController {
     @Autowired
     private AchievementService achievementService;
 
-    @Autowired
-    private UserTokenService userTokenService;
+    /**
+     * 获取所有成就
+     *
+     * @return result
+     */
+    @GetMapping(value = "/achievements")
+    public Page<Achievement> getAllAchievements() {
 
+        return achievementService.getAllAchievements();
+    }
 
-    // 增加一个资源
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
+    /**
+     * 按页获取所有成就
+     *
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/achievements", params = "page")
+    public Page<Achievement> getAchievementsPage(@RequestParam int page) {
+
+        return achievementService.getAchievementsPage(page, 10);
+    }
+
+    /**
+     * 增加一个成就
+     */
+    @PreAuthorize("hasRole('teacher')")
     @PostMapping(value = "/achievements")
     public void addAchievement(@RequestBody InsertAchievementRequestDto request) {
 
-        // String title = request.getParameter("title");
-        // String content = request.getParameter("content");
-        // Integer userId = userTokenService.getUserid(request.getHeader("token"));
-        //
-        // achievementService.addAchievement(title, content, userId);
-
+        achievementService.addAchievement(request);
     }
 
-    // 获取所有资源
-    @RootAuth
-    @RequestMapping(value = "/achievements", method = RequestMethod.GET)
-    @ResponseBody
-    public AchievementResponse getAllAchievements() {
-        List<Achievement> all = achievementService.getAllAchievements();
-        int count = achievementService.getAchievementCount();
+    /**
+     * 按页搜索成就
+     *
+     * @param search 搜索标题
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/achievements", params = {"search", "page"})
+    public Page<Achievement> searchAchievements(@RequestParam String search, @RequestParam int page) {
 
-        return new AchievementResponse(count, all);
+        return achievementService.searchAchievements(search, page, 10);
     }
 
-    // 按页获取所有资源
-    @RequestMapping(value = "/achievements", params = "page", method = RequestMethod.GET)
-    @ResponseBody
-    public AchievementResponse getAchievementsPage(@RequestParam int page) {
-
-        List<Achievement> result = achievementService.getAchievementsPage(page, 10);
-        int count = achievementService.getAchievementCount();
-
-        return new AchievementResponse(count, result);
-    }
-
-    // 按页搜索资源
-    @RequestMapping(value = "/achievements", params = {"search", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public AchievementResponse searchAchievements(@RequestParam String search, @RequestParam int page) {
-
-        List<Achievement> result = achievementService.searchAchievements(search, page, 10);
-        int count = achievementService.getSearchCount(search);
-
-        return new AchievementResponse(count, result);
-    }
-
-    // 获取资源详情
-    @RequestMapping(value = "/achievements", params = "id", method = RequestMethod.GET)
-    @ResponseBody
+    /**
+     * 获取成就详情
+     *
+     * @param id id
+     * @return result
+     */
+    @GetMapping(value = "/achievements", params = "id")
     public Achievement getAchievementsById(@RequestParam int id) {
 
-        Achievement result = achievementService.getAchievementById(id);
-        return result;
+        return achievementService.getAchievementById(id);
     }
 
-    // 更新资源
-    @MyselfAuth(tableName = "intro_achievement", column = "up_userid")
-    @RequestMapping(value = "/achievements", params = "id", method = RequestMethod.PUT)
-    public void updateAchievement(@RequestParam int id, HttpServletRequest request) {
-        Achievement achievement = new Achievement();
-        achievement.setId(id);
-        achievement.setTitle(request.getParameter("title"));
-        achievement.setContent(request.getParameter("content"));
+    /**
+     * 更新成就
+     */
+    @PreAuthorize("hasRole('teacher')")
+    @PutMapping(value = "/achievements", params = "id")
+    public void updateAchievement(@RequestParam int id, @RequestBody UpdateAchievementRequestDto request) {
 
-        achievementService.updateAchievement(achievement);
+        achievementService.updateAchievement(id, request);
     }
 
-    // 删除资源
-    @MyselfAuth(tableName = "intro_achievement", column = "up_userid")
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/achievements", params = "id", method = RequestMethod.DELETE)
+    /**
+     * 成就
+     *
+     * @param id id
+     */
+    @PreAuthorize("hasRole('teacher')")
+    @DeleteMapping(value = "/achievements", params = "id")
     public void deleteAchievement(@RequestParam int id) {
         achievementService.deleteAchievement(id);
     }

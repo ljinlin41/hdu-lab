@@ -59,10 +59,11 @@ public class AnnounceController {
      * @param id 通知Id
      * @return result
      */
-    @PreAuthorize("hasRole('student')")
+    @PreAuthorize("hasRole('student') and authentication.principal.getUserId() == 1")
     @GetMapping(value = "/announces", params = "id")
     public Announce getAnnounceById(@RequestParam int id) {
         Announce announce = announceService.getAnnounceById(id);
+
         return announce;
     }
 

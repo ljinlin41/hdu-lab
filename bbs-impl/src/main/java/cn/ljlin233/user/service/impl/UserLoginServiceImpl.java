@@ -11,8 +11,10 @@ import cn.ljlin233.user.dao.UserAuthsDao;
 import cn.ljlin233.user.dao.UserRoleDao;
 import cn.ljlin233.user.dto.UserLoginRequestDto;
 import cn.ljlin233.user.entity.UserAuths;
+import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.entity.UserRole;
 import cn.ljlin233.user.entity.UserToken;
+import cn.ljlin233.user.service.UserInfoService;
 import cn.ljlin233.user.service.UserLoginService;
 import cn.ljlin233.user.service.UserTokenService;
 import cn.ljlin233.util.common.TokenUtil;
@@ -36,7 +38,15 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Autowired
     private UserRoleDao userRoleDao;
 
+    @Autowired
+    private UserInfoService userInfoService;
 
+    /**
+     * 校验登录信息是否正确，并把UserToken存入Redis
+     *
+     * @param request 请求
+     * @return token
+     */
     @Override
     public UserToken userLogin(UserLoginRequestDto request) {
 
@@ -49,8 +59,11 @@ public class UserLoginServiceImpl implements UserLoginService {
             list.add(role);
         }, ArrayList::addAll);
 
+        UserInfo userInfo = userInfoService.getUserInfo(userId);
+
         UserToken userToken = new UserToken();
         userToken.setUserId(userId);
+        userToken.setNickName(userInfo.getNickname());
         userToken.setToken(token);
         userToken.setRole(roleList);
 
