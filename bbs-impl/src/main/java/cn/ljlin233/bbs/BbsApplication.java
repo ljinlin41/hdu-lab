@@ -2,6 +2,7 @@ package cn.ljlin233.bbs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 import tk.mybatis.spring.annotation.MapperScan;
 
@@ -13,6 +14,7 @@ import tk.mybatis.spring.annotation.MapperScan;
         "cn.ljlin233.user.*"})
 @MapperScan(basePackages = {"cn.ljlin233.introduce.dao.mapper", "cn.ljlin233.announce.dao.mapper",
     "cn.ljlin233.user.dao.mapper"})
+@ServletComponentScan(basePackages = "cn.ljlin233.config")
 public class BbsApplication {
 
     public static void main(String[] args) {

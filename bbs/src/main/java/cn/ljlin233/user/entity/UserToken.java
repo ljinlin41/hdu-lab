@@ -18,13 +18,18 @@ public class UserToken {
     private Integer userId;
 
     /**
-     * token
+     * nickName
      */
-    private String token;
+    private String nickName;
 
     /**
      * 用户角色
      */
     private List<String> role;
+
+    /**
+     * token
+     */
+    private String token;
 
 }
