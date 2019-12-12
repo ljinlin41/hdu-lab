@@ -36,6 +36,8 @@ public class TokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
 
+        // TODO token校验刷新时间
+
         String token = request.getHeader("token");
 
         if (token != null) {

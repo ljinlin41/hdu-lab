@@ -1,120 +1,115 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.DeleteJobRequestDto;
+import cn.ljlin233.introduce.dto.InsertJobRequestDto;
+import cn.ljlin233.introduce.dto.UpdateJobRequestDto;
 import cn.ljlin233.introduce.entity.Job;
-import cn.ljlin233.introduce.entity.JobResponse;
 import cn.ljlin233.introduce.service.JobService;
-import cn.ljlin233.user.service.UserTokenService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.MyselfAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
  * JobController
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class JobController {
 
+    @Autowired
     private JobService jobService;
 
-    private UserTokenService userTokenService;
+    /**
+     * 获取所有招聘信息
+     *
+     * @return result
+     */
+    @GetMapping(value = "/jobs")
+    public Page<Job> getAllJobs() {
 
-    public JobController() {}
-
-    @Autowired
-    public JobController(JobService jobService, UserTokenService userTokenService) {
-        this.jobService = jobService;
-        this.userTokenService = userTokenService;
+        return jobService.getAllJobs();
     }
 
-    // 增加一个招聘信息
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/jobs", method = RequestMethod.POST)
-    public void addJob(HttpServletRequest request) {
+    /**
+     * 按页获取所有招聘信息
+     *
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/jobs", params = "page")
+    public Page<Job> getJobsPage(@RequestParam int page) {
 
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
-        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
-
-        jobService.addJob(title, content, 123);
-
+        return jobService.getJobsPage(page, 10);
     }
 
-    // 获取所有招聘信息
-    @RootAuth
-    @RequestMapping(value = "/jobs", method = RequestMethod.GET)
-    @ResponseBody
-    public JobResponse getAllJobs() {
-        List<Job> all = jobService.getAllJobs();
-        int count = jobService.getJobCount();
+    /**
+     * 按页搜索招聘信息
+     *
+     * @param search 搜索标题
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/jobs", params = {"search", "page"})
+    public Page<Job> searchJobs(@RequestParam String search, @RequestParam int page) {
 
-        return new JobResponse(count, all);
+        return jobService.searchJobs(search, page, 10);
     }
 
-    // 按页获取所有招聘信息
-    @RequestMapping(value = "/jobs", params = "page", method = RequestMethod.GET)
-    @ResponseBody
-    public JobResponse getJobsPage(@RequestParam int page) {
-
-        List<Job> result = jobService.getJobsPage(page, 10);
-        int count = jobService.getJobCount();
-
-        return new JobResponse(count, result);
-    }
-
-    // 按页搜索招聘信息
-    @RequestMapping(value = "/jobs", params = {"search", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public JobResponse searchJobs(@RequestParam String search, @RequestParam int page) {
-
-        List<Job> result = jobService.searchJobs(search, page, 10);
-        int count = jobService.getSearchCount(search);
-
-        return new JobResponse(count, result);
-    }
-
-    // 获取招聘信息详情
-    @RequestMapping(value = "/jobs", params = "id", method = RequestMethod.GET)
-    @ResponseBody
+    /**
+     * 获取招聘信息详情
+     *
+     * @param id 招聘id
+     * @return result
+     */
+    @GetMapping(value = "/jobs", params = "id")
     public Job getJobsById(@RequestParam int id) {
 
-        Job result = jobService.getJobById(id);
-        return result;
+        return jobService.getJobById(id);
     }
 
-    // 更新招聘信息
-    @MyselfAuth(tableName = "intro_job", column = "up_userid")
-    @RequestMapping(value = "/jobs", params = "id", method = RequestMethod.PUT)
-    public void updateJob(@RequestParam int id, HttpServletRequest request) {
-        Job job = new Job();
-        job.setId(id);
-        job.setTitle(request.getParameter("title"));
-        job.setContent(request.getParameter("content"));
+    /**
+     * 增加一个招聘信息
+     *
+     * @param request request
+     */
+    @PostMapping(value = "/jobs")
+    @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
+    public void addJob(@RequestBody InsertJobRequestDto request) {
 
-        jobService.updateJob(job);
+        jobService.addJob(request);
     }
 
-    // 删除招聘信息
-    @MyselfAuth(tableName = "intro_job", column = "up_userid")
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/jobs", params = "id", method = RequestMethod.DELETE)
-    public void deleteJob(@RequestParam int id) {
-        jobService.deleteJob(id);
+    /**
+     * 更新招聘信息
+     *
+     * @param request request
+     */
+    @PutMapping(value = "/jobs")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
+    public void updateJob(@RequestBody UpdateJobRequestDto request) {
+
+        jobService.updateJob(request);
+    }
+
+    /**
+     * 删除招聘信息
+     *
+     * @param request request
+     */
+    @DeleteMapping(value = "/jobs")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
+    public void deleteJob(@RequestBody DeleteJobRequestDto request) {
+        jobService.deleteJob(request.getJobId());
     }
 
 }

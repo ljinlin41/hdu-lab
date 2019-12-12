@@ -50,6 +50,8 @@ public class UserLoginServiceImpl implements UserLoginService {
     @Override
     public UserToken userLogin(UserLoginRequestDto request) {
 
+        // TODO token校验刷新时间
+
         int userId = checkLogin(request);
         String token = TokenUtil.getToken();
         List<UserRole> userRoleList = userRoleDao.getUserRoleByUserId(userId);

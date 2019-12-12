@@ -1,8 +1,7 @@
 package cn.ljlin233.introduce.dao;
 
-import java.util.List;
-
 import cn.ljlin233.introduce.entity.Job;
+import cn.ljlin233.util.Page;
 
 /**
  * JobDao
@@ -11,19 +10,13 @@ import cn.ljlin233.introduce.entity.Job;
  */
 public interface JobDao {
 
-    /**
-     * 添加一个招聘
-     *
-     * @param job 招聘
-     */
-    void addJob(Job job);
 
     /**
      * 获取所有的招聘
      *
      * @return 招聘列表
      */
-    List<Job> getAllJobs();
+    Page<Job> getAllJobs();
 
     /**
      * 按页获取招聘
@@ -32,7 +25,7 @@ public interface JobDao {
      * @param pageSize 每页大小
      * @return 招聘列表
      */
-    List<Job> getJobsPage(int pageNum, int pageSize);
+    Page<Job> getJobsPage(int pageNum, int pageSize);
 
     /**
      * 按招聘Id获取招聘信息
@@ -42,19 +35,6 @@ public interface JobDao {
      */
     Job getJobById(int id);
 
-    /**
-     * 增加一个招聘的访问数
-     *
-     * @param id 招聘Id
-     */
-    void addVisitCount(int id);
-
-    /**
-     * 获取招聘总数
-     *
-     * @return 招聘总数
-     */
-    int getJobCount();
 
     /**
      * 按标题搜索招聘
@@ -64,15 +44,15 @@ public interface JobDao {
      * @param pageNum 每页大小
      * @return 招聘列表
      */
-    List<Job> searchJobs(String keywords, int pageSize, int pageNum);
+    Page<Job> searchJobs(String keywords, int pageSize, int pageNum);
+
 
     /**
-     * 搜索结果数
+     * 添加一个招聘
      *
-     * @param keywords 搜索标题
-     * @return 结果数
+     * @param job 招聘
      */
-    int getSearchCount(String keywords);
+    void addJob(Job job);
 
     /**
      * 更新一个招聘
@@ -82,10 +62,10 @@ public interface JobDao {
     void updateJob(Job job);
 
     /**
-     * 根据招聘Id删除一个招聘
+     * 删除一个招聘
      *
-     * @param id 招聘Id
+     * @param job 招聘
      */
-    void deleteJob(int id);
+    void deleteJob(Job job);
 
 }

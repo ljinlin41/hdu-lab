@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -18,6 +19,7 @@ import tk.mybatis.mapper.entity.Example;
  * @author lvjinlin42@foxmail.com
  * @date 2019/12/11 19:50
  */
+@Repository
 public class AchievementDaoImpl implements AchievementDao {
 
     @Autowired

@@ -1,119 +1,113 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.DeleteAwardRequestDto;
+import cn.ljlin233.introduce.dto.InsertAwardRequestDto;
+import cn.ljlin233.introduce.dto.UpdateAwardRequestDto;
 import cn.ljlin233.introduce.entity.Award;
-import cn.ljlin233.introduce.entity.AwardResponse;
 import cn.ljlin233.introduce.service.AwardService;
-import cn.ljlin233.user.service.UserTokenService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.MyselfAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
  * AwardController
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class AwardController {
 
+    @Autowired
     private AwardService awardService;
 
-    private UserTokenService userTokenService;
+    /**
+     * 获取所有奖项
+     */
+    @GetMapping(value = "/awards")
+    public Page<Award> getAllAwards() {
 
-    public AwardController() {}
-
-    @Autowired
-    public AwardController(AwardService awardService, UserTokenService userTokenService) {
-        this.awardService = awardService;
-        this.userTokenService = userTokenService;
+        return awardService.getAllAwards();
     }
 
-    // 增加一个奖项
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/awards", method = RequestMethod.POST)
-    public void addAward(HttpServletRequest request) {
+    /**
+     * 按页获取奖项
+     *
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/awards", params = "page")
+    public Page<Award> getAwardsByPage(@RequestParam int page) {
 
-        String title = request.getParameter("title");
-        String content = request.getParameter("content");
-        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
-
-        awardService.addAward(title, content, 123);
+        return awardService.getAwardsPage(page, 10);
     }
 
-    // 获取所有奖项
-    @RootAuth
-    @RequestMapping(value = "/awards", method = RequestMethod.GET)
-    @ResponseBody
-    public AwardResponse getAllAwards() {
-        List<Award> all = awardService.getAllAwards();
-        int count = awardService.getAwardCount();
+    /**
+     * 按页搜索奖项
+     *
+     * @param search 搜索标题
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/awards", params = {"search", "page"})
+    public Page<Award> searchAwards(@RequestParam String search, @RequestParam int page) {
 
-        return new AwardResponse(count, all);
+        return awardService.searchAwards(search, page, 10);
     }
 
-    // 按页获取奖项
-    @RequestMapping(value = "/awards", params = "page", method = RequestMethod.GET)
-    @ResponseBody
-    public AwardResponse getAwardsByPage(@RequestParam int page) {
+    /**
+     * 获取奖项详情
+     *
+     * @param id 奖项id
+     * @return result
+     */
+    @GetMapping(value = "/awards", params = "id")
+    public Award getAchievementsById(@RequestParam int id) {
 
-        List<Award> result = awardService.getAwardsPage(page, 10);
-        int count = awardService.getAwardCount();
-
-        return new AwardResponse(count, result);
+        return awardService.getAwardById(id);
     }
 
-    // 按页搜索奖项
-    @RequestMapping(value = "/awards", params = {"search", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public AwardResponse searchAwards(@RequestParam String search, @RequestParam int page) {
+    /**
+     * 增加一个奖项
+     *
+     * @param request request
+     */
+    @PostMapping(value = "/awards")
+    @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
+    public void addAward(@RequestBody InsertAwardRequestDto request) {
 
-        List<Award> result = awardService.searchAwards(search, page, 10);
-        int count = awardService.getSearchCount(search);
-
-        return new AwardResponse(count, result);
+        awardService.addAward(request);
     }
 
-    // 获取资源详情
-    @RequestMapping(value = "/awards", params = "id", method = RequestMethod.GET)
-    @ResponseBody
-    public Award getAchievementsById(@RequestParam String id) {
-        Integer idInt = Integer.valueOf(id);
-        Award result = awardService.getAwardById(idInt);
-        return result;
+    /**
+     * 更新奖项
+     *
+     * @param request request
+     */
+    @PutMapping(value = "/awards")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
+    public void updateAward(@RequestBody UpdateAwardRequestDto request) {
+
+        awardService.updateAward(request);
     }
 
-    // 更新资源
-    @MyselfAuth(tableName = "intro_award", column = "up_userid")
-    @RequestMapping(value = "/awards", params = "id", method = RequestMethod.PUT)
-    public void updateAward(@RequestParam String id, HttpServletRequest request) {
-        Award award = new Award();
-        award.setId(Integer.valueOf(id));
-        award.setTitle(request.getParameter("title"));
-        award.setContent(request.getParameter("content"));
+    /**
+     * 删除奖项
+     *
+     * @param request request
+     */
+    @DeleteMapping(value = "/awards")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
+    public void deleteAchievement(@RequestBody DeleteAwardRequestDto request) {
 
-        awardService.updateAward(award);
-    }
-
-    // 删除资源
-    @MyselfAuth(tableName = "intro_award", column = "up_userid")
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/awards", params = "id", method = RequestMethod.DELETE)
-    public void deleteAchievement(@RequestParam String id) {
-        Integer idInt = Integer.valueOf(id);
-        awardService.deleteAward(idInt);
+        awardService.deleteAward(request.getAwardId());
     }
 }

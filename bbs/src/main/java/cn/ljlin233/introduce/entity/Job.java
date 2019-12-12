@@ -4,9 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Job
@@ -14,31 +13,30 @@ import lombok.NoArgsConstructor;
  * @author lvjinlin42@foxmail.com
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Table(name = "intro_job")
 public class Job {
 
     @Id
     @Column(name = "id")
-    public Integer id;
+    private Integer id;
 
     @Column(name = "title")
-    public String title;
+    private String title;
 
     @Column(name = "content")
-    public String content;
+    private String content;
 
     @Column(name = "up_userid")
-    public Integer upUserId;
+    private Integer upUserId;
 
     @Column(name = "up_nickname")
-    public String upNickname;
+    private String upNickname;
 
     @Column(name = "up_date")
-    public String upDate;
+    private String upDate;
 
     @Column(name = "visit_count")
-    public Integer visitCount;
+    private Integer visitCount;
 
 }

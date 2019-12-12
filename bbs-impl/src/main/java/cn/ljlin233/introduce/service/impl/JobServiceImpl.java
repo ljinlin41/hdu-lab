@@ -1,64 +1,45 @@
 package cn.ljlin233.introduce.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import cn.ljlin233.introduce.dao.JobDao;
+import cn.ljlin233.introduce.dto.InsertJobRequestDto;
+import cn.ljlin233.introduce.dto.UpdateJobRequestDto;
 import cn.ljlin233.introduce.entity.Job;
 import cn.ljlin233.introduce.service.JobService;
-import cn.ljlin233.user.entity.UserInfo;
-import cn.ljlin233.user.service.UserInfoService;
-import cn.ljlin233.util.exception.entity.DataCheckedException;
+import cn.ljlin233.util.Page;
+import cn.ljlin233.util.common.DateUtil;
+import cn.ljlin233.util.common.UserContext;
+import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * JobServiceImpl
+ *
+ * @author lvjinlin42@foxmail.com
  */
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class JobServiceImpl implements JobService {
 
-    private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    @Autowired
     private JobDao jobDao;
 
-    private UserInfoService userInfoService;
-
-    public JobServiceImpl() {
-    }
-
-    @Autowired
-    public JobServiceImpl(JobDao jobDao, UserInfoService userInfoService) {
-        this.jobDao = jobDao;
-        this.userInfoService = userInfoService;
-    }
-
     @Override
-    public void addJob(String title, String content, Integer userId) {
+    public void addJob(InsertJobRequestDto request) {
 
-        if (title == null || title.length() == 0) {
-            throw new DataCheckedException("标题不能为空!");
-        }
-        if (content == null || content.length() == 0) {
-            throw new DataCheckedException("内容不能为空!");
-        }
-        UserInfo userInfo = userInfoService.getUserInfo(userId);
-        if (userId == null) {
-            throw new DataCheckedException("账号不存在!");
-        }
+        UserContext userContext = UserContextUtil.getUserContext();
 
-        Job job = new Job();
-        job.setTitle(title);
-        job.setContent(content);
-        job.setUpUserId(userId);
-        job.setUpNickname(userInfo.getNickname());
-        String upDate = dateformat.format(new Date());
-        job.setUpDate(upDate);
+        Job job = Job.builder()
+            .title(request.getTitle())
+            .content(request.getContent())
+            .upUserId(userContext.getId())
+            .upNickname(userContext.getNickName())
+            .upDate(DateUtil.getNow())
+            .build();
+
         try {
             jobDao.addJob(job);
         } catch (Exception e) {
@@ -68,8 +49,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getAllJobs() {
-        List<Job> all = null;
+    public Page<Job> getAllJobs() {
+        Page<Job> all;
         try {
             all = jobDao.getAllJobs();
         } catch (Exception e) {
@@ -79,11 +60,10 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> getJobsPage(int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Job> result = null;
+    public Page<Job> getJobsPage(int pageNum, int pageSize) {
+        Page<Job> result;
         try {
-            result = jobDao.getJobsPage(start, pageNum);
+            result = jobDao.getJobsPage(pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("服务器获取招聘信息失败!", e.getMessage());
         }
@@ -92,11 +72,11 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<Job> searchJobs(String keywords, int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Job> result = null;
+    public Page<Job> searchJobs(String keywords, int pageNum, int pageSize) {
+
+        Page<Job> result;
         try {
-            result = jobDao.searchJobs(keywords, start, pageNum);
+            result = jobDao.searchJobs(keywords, pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("服务器搜索招聘信息失败!", e.getMessage());
         }
@@ -106,51 +86,24 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public Job getJobById(int id) {
-        Job result = null;
+        Job result;
         try {
             result = jobDao.getJobById(id);
         } catch (Exception e) {
             throw new SystemException("服务器获取招聘信息失败!", e.getMessage());
         }
         // 访问次数+1
-        addVisitCount(id);
+        addVisitCount(result);
 
         return result;
     }
 
-    @Override
-    public void addVisitCount(int id) {
-        try {
-            jobDao.addVisitCount(id);
-        } catch (Exception e) {
-            throw new SystemException("招聘信息访问数错误!", e.getMessage());
-        }
-    }
 
     @Override
-    public int getJobCount() {
-        int count = 0;
-        try {
-            count = jobDao.getJobCount();
-        } catch (Exception e) {
-            throw new SystemException("读取招聘信息数量错误!", e.getMessage());
-        }
-        return count;
-    }
+    public void updateJob(UpdateJobRequestDto request) {
 
-    @Override
-    public int getSearchCount(String keywords) {
-        int count = 0;
-        try {
-            count = jobDao.getSearchCount(keywords);
-        } catch (Exception e) {
-            throw new SystemException("读取招聘信息搜索数量错误!", e.getMessage());
-        }
-        return count;
-    }
+        Job job = Job.builder().id(request.getJobId()).title(request.getTitle()).content(request.getContent()).build();
 
-    @Override
-    public void updateJob(Job job) {
         try {
             jobDao.updateJob(job);
         } catch (Exception e) {
@@ -160,10 +113,24 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public void deleteJob(int id) {
+
+        Job job = jobDao.getJobById(id);
+
         try {
-            jobDao.deleteJob(id);
+            jobDao.deleteJob(job);
         } catch (Exception e) {
             throw new SystemException("删除招聘信息失败!", e.getMessage());
+        }
+    }
+
+    private void addVisitCount(Job job) {
+
+        Job newJob = Job.builder().id(job.getId()).visitCount(job.getVisitCount() + 1).build();
+
+        try {
+            jobDao.updateJob(newJob);
+        } catch (Exception e) {
+            throw new SystemException("招聘信息访问数错误!", e.getMessage());
         }
     }
 

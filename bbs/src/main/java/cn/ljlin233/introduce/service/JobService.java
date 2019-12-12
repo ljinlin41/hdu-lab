@@ -1,8 +1,9 @@
 package cn.ljlin233.introduce.service;
 
-import java.util.List;
-
+import cn.ljlin233.introduce.dto.InsertJobRequestDto;
+import cn.ljlin233.introduce.dto.UpdateJobRequestDto;
 import cn.ljlin233.introduce.entity.Job;
+import cn.ljlin233.util.Page;
 
 /**
  * JobService
@@ -11,21 +12,13 @@ import cn.ljlin233.introduce.entity.Job;
  */
 public interface JobService {
 
-    /**
-     * 增加一个招聘
-     *
-     * @param title 标题
-     * @param content 正文
-     * @param userId 用户Id
-     */
-    void addJob(String title, String content, Integer userId);
 
     /**
      * 获取所有招聘
      *
      * @return 招聘列表
      */
-    List<Job> getAllJobs();
+    Page<Job> getAllJobs();
 
     /**
      * 按页获取招聘
@@ -34,7 +27,7 @@ public interface JobService {
      * @param pageSize 每页大小
      * @return 招聘列表
      */
-    List<Job> getJobsPage(int pageNum, int pageSize);
+    Page<Job> getJobsPage(int pageNum, int pageSize);
 
     /**
      * 根据招聘Id获取招聘
@@ -44,19 +37,6 @@ public interface JobService {
      */
     Job getJobById(int id);
 
-    /**
-     * 增加招聘的访问数
-     *
-     * @param id 招聘Id
-     */
-    void addVisitCount(int id);
-
-    /**
-     * 获取招聘总数
-     *
-     * @return 招聘总数
-     */
-    int getJobCount();
 
     /**
      * 按标题搜索招聘
@@ -66,22 +46,22 @@ public interface JobService {
      * @param pageSize 每页大小
      * @return 招聘列表
      */
-    List<Job> searchJobs(String keywords, int pageNum, int pageSize);
+    Page<Job> searchJobs(String keywords, int pageNum, int pageSize);
+
 
     /**
-     * 获取搜索结果数量
+     * 增加一个招聘
      *
-     * @param keywords 搜索标题
-     * @return 搜索结果数量
+     * @param request request
      */
-    int getSearchCount(String keywords);
+    void addJob(InsertJobRequestDto request);
 
     /**
      * 更新一个招聘
      *
-     * @param job 招聘
+     * @param request request
      */
-    void updateJob(Job job);
+    void updateJob(UpdateJobRequestDto request);
 
     /**
      * 删除一个招聘
