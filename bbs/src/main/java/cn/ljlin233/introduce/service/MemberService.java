@@ -1,8 +1,8 @@
 package cn.ljlin233.introduce.service;
 
-import java.util.List;
-
+import cn.ljlin233.introduce.dto.InsertMemberRequestDto;
 import cn.ljlin233.introduce.entity.Member;
+import cn.ljlin233.util.Page;
 
 /**
  * MemberService
@@ -16,7 +16,7 @@ public interface MemberService {
      *
      * @return 成员列表
      */
-    List<Member> getAllMembers();
+    Page<Member> getAllMembers();
 
     /**
      * 按页获取成员
@@ -25,14 +25,8 @@ public interface MemberService {
      * @param pageSize 每页大小
      * @return 成员列表
      */
-    List<Member> getAllMembersByPage(int pageNum, int pageSize);
+    Page<Member> getAllMembersByPage(int pageNum, int pageSize);
 
-    /**
-     * 获取成员总数
-     *
-     * @return 成员总数
-     */
-    int getAllMembersCounts();
 
     /**
      * 根据成员Id获取成员
@@ -43,6 +37,16 @@ public interface MemberService {
     Member getMemberById(int id);
 
     /**
+     * 获取部门所有成员
+     *
+     * @param departmentId 部门Id
+     * @param pageNum 第N页
+     * @param pageSize 每页大小
+     * @return 成员列表
+     */
+    Page<Member> getMemberByDepartment(int departmentId, int pageNum, int pageSize);
+
+    /**
      * 根据成员名称搜索成员
      *
      * @param name 成员名称
@@ -50,25 +54,15 @@ public interface MemberService {
      * @param pageSize 每页大小
      * @return 搜索结果列表
      */
-    List<Member> searchMembersByName(String name, int pageNum, int pageSize);
+    Page<Member> searchMembersByName(String name, int pageNum, int pageSize);
 
-    /**
-     * 获取搜索结果数量
-     *
-     * @param name 搜索名称
-     * @return 搜索结果数量
-     */
-    int getSearchCounts(String name);
 
     /**
      * 增加一个成员
      *
-     * @param memberId 用户Id
-     * @param memberType 成员类型
-     * @param memberName 成员名称
-     * @param departmentId 所属部门Id
+     * @param request request
      */
-    void addMember(int memberId, String memberType, String memberName, int departmentId);
+    void addMember(InsertMemberRequestDto request);
 
     /**
      * 删除一个成员
@@ -76,13 +70,5 @@ public interface MemberService {
      * @param id 成员Id
      */
     void deleteMember(int id);
-
-    /**
-     * 获取部门所有成员
-     *
-     * @param departmentId 部门Id
-     * @return 成员列表
-     */
-    List<Member> getTeacherMember(int departmentId);
 
 }

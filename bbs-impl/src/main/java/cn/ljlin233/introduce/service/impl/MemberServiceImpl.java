@@ -1,33 +1,28 @@
 package cn.ljlin233.introduce.service.impl;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.ljlin233.introduce.dao.MemberDao;
+import cn.ljlin233.introduce.dto.InsertMemberRequestDto;
 import cn.ljlin233.introduce.entity.Member;
 import cn.ljlin233.introduce.service.MemberService;
+import cn.ljlin233.util.Page;
 import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * MemberServiceImpl
+ * @author lvjinlin42@foxmail.com
  */
 @Service
 public class MemberServiceImpl implements MemberService {
 
+    @Autowired
     private MemberDao memberDao;
 
-    public MemberServiceImpl() {}
-
-    @Autowired
-    public MemberServiceImpl(MemberDao memberDao) {
-        this.memberDao = memberDao;
-    }
-
     @Override
-    public List<Member> getAllMembers() {
-        List<Member> all;
+    public Page<Member> getAllMembers() {
+        Page<Member> all;
         try {
             all = memberDao.getAllMembers();
         } catch (Exception e) {
@@ -37,31 +32,22 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> getAllMembersByPage(int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Member> result = null;
+    public Page<Member> getAllMembersByPage(int pageNum, int pageSize) {
+
+        Page<Member> result;
         try {
-            result = memberDao.getMembersByPage(start, pageNum);
+            result = memberDao.getMembersByPage(pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("按页获取成员介绍失败", e.getMessage());
         }
         return result;
     }
 
-    @Override
-    public int getAllMembersCounts() {
-        int count = 0;
-        try {
-            count = memberDao.getMemberCounts();
-        } catch (Exception e) {
-            throw new SystemException("获取成员数量失败", e.getMessage());
-        }
-        return count;
-    }
+
 
     @Override
     public Member getMemberById(int id) {
-        Member result = null;
+        Member result;
         try {
             result = memberDao.getMemberById(id);
         } catch (Exception e) {
@@ -72,12 +58,25 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public List<Member> searchMembersByName(String name, int page, int pageNum) {
-        int start = (page - 1) * pageNum;
-        List<Member> result = null;
+    public Page<Member> getMemberByDepartment(int departmentId, int pageNum, int pageSize) {
+
+        Page<Member> result;
+        try {
+            result = memberDao.getMemberByDepartment(departmentId, pageNum, pageSize);
+        } catch (Exception e) {
+            throw new SystemException("按部门获取成员介绍失败", e.getMessage());
+        }
+        return result;
+    }
+
+
+    @Override
+    public Page<Member> searchMembersByName(String name, int pageNum, int pageSize) {
+
+        Page<Member> result;
 
         try {
-            result = memberDao.searchMemberByName(name, start, pageNum);
+            result = memberDao.searchMemberByName(name, pageNum, pageSize);
         } catch (Exception e) {
             throw new SystemException("搜索成员失败", e.getMessage());
         }
@@ -86,23 +85,9 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public int getSearchCounts(String name) {
-        int count = 0;
-        try {
-            count = memberDao.getSearchCounts(name);
-        } catch (Exception e) {
-            throw new SystemException("获取搜索成员数量失败", e.getMessage());
-        }
-        return count;
-    }
-
-    @Override
-    public void addMember(int memberId, String memberType, String memberName, int departmentId) {
-        Member member = new Member();
-        member.setMemberId(memberId);
-        member.setMemberType(memberType);
-        member.setMemberName(memberName);
-        member.setDepartmentId(departmentId);
+    public void addMember(InsertMemberRequestDto request) {
+        Member member = Member.builder().memberId(request.getMemberId()).memberName(request.getMemberName()).memberType(
+            request.getMemberType()).departmentId(request.getDepartmentId()).build();
 
         try {
             memberDao.addMember(member);
@@ -113,34 +98,14 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void deleteMember(int id) {
+
         try {
-            memberDao.deleteMember(id);
+
+            Member member = memberDao.getMemberById(id);
+            memberDao.deleteMember(member);
         } catch (Exception e) {
             throw new SystemException("删除成员失败", e.getMessage());
         }
     }
 
-    @Override
-    public List<Member> getTeacherMember(int departmentId) {
-        List<Member> result = null;
-        try {
-            result = memberDao.getTeacherMember(departmentId);
-        } catch (Exception e) {
-            throw new SystemException("获取部门教师失败", e.getMessage());
-        }
-
-        return result;
-    }
-
-    // @Override
-    // public List<Member> getMembersByMemberId(int memberId) {
-    //     List<Member> result = null;
-    //     try {
-    //         result = memberDao.getMembersByMemberId(memberId);
-    //     } catch (Exception e) {
-    //         throw new SystemException("获取教师所在部门失败", e.getMessage());
-    //     }
-    //
-    //     return result;
-    // }
 }

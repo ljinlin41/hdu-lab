@@ -1,94 +1,74 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.DeleteMemberRequestDto;
+import cn.ljlin233.introduce.dto.InsertMemberRequestDto;
 import cn.ljlin233.introduce.entity.Member;
-import cn.ljlin233.introduce.entity.MemberResponse;
 import cn.ljlin233.introduce.service.MemberService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
  * MemberController
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class MemberController {
 
+    @Autowired
     private MemberService memberService;
 
-    public MemberController() {}
+    @GetMapping(value = "/members")
+    public Page<Member> getAllMembers() {
 
-    @Autowired
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
+        return memberService.getAllMembers();
     }
 
-    @RequestMapping(value = "/members", method = RequestMethod.GET)
-    @ResponseBody
-    public MemberResponse getAllMembers() {
-        List<Member> all = memberService.getAllMembers();
-        int count = memberService.getAllMembersCounts();
+    @GetMapping(value = "/members", params = "page")
+    public Page<Member> getMembersByPage(@RequestParam int page) {
 
-        return new MemberResponse(count, all);
+        return memberService.getAllMembersByPage(page, 10);
     }
 
-    @RequestMapping(value = "/members", params = "page", method = RequestMethod.GET)
-    @ResponseBody
-    public MemberResponse getMembersByPage(@RequestParam int page) {
-        List<Member> all = memberService.getAllMembersByPage(page, 10);
-        int count = memberService.getAllMembersCounts();
-
-        return new MemberResponse(count, all);
-    }
-
-    @RequestMapping(value = "/members", params = "id", method = RequestMethod.GET)
-    @ResponseBody
+    @GetMapping(value = "/members", params = "id")
     public Member getMembersById(@RequestParam int id) {
-        Member result = memberService.getMemberById(id);
-        return result;
+
+        return memberService.getMemberById(id);
     }
 
-    @RequestMapping(value = "/members", params = {"search", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public MemberResponse searchMembers(@RequestParam String search, @RequestParam int page) {
-        List<Member> all = memberService.searchMembersByName(search, page, 10);
-        int count = memberService.getSearchCounts(search);
+    @GetMapping(value = "/members", params = {"departmentId", "page"})
+    public Page<Member> getMembersByDepartment(@RequestParam int departmentId, @RequestParam int page) {
 
-        return new MemberResponse(count, all);
+        return memberService.getMemberByDepartment(departmentId, page, 10);
     }
 
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/members", method = RequestMethod.POST)
-    public void addMember(HttpServletRequest request) {
+    @GetMapping(value = "/members", params = {"search", "page"})
+    public Page<Member> searchMembers(@RequestParam String search, @RequestParam int page) {
 
-        Integer memberId = Integer.valueOf(request.getParameter("memberId"));
-        Integer departmentId = Integer.valueOf(request.getParameter("departmentId"));
-        String memberName = request.getParameter("memberName");
-        String memberType = request.getParameter("memberType");
-
-        memberService.addMember(memberId, memberType, memberName, departmentId);
+        return memberService.searchMembersByName(search, page, 10);
     }
 
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/members", params = "id", method = RequestMethod.DELETE)
-    public void deleteMember(@RequestParam int id) {
+    @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
+    @PostMapping(value = "/members")
+    public void addMember(@RequestBody InsertMemberRequestDto request) {
 
-        memberService.deleteMember(id);
+        memberService.addMember(request);
+    }
+
+    @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
+    @DeleteMapping(value = "/members")
+    public void deleteMember(@RequestBody DeleteMemberRequestDto request) {
+
+        memberService.deleteMember(request.getMemberId());
     }
 
 }

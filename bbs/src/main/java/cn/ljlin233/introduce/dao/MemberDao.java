@@ -1,8 +1,7 @@
 package cn.ljlin233.introduce.dao;
 
-import java.util.List;
-
 import cn.ljlin233.introduce.entity.Member;
+import cn.ljlin233.util.Page;
 
 /**
  * MemberDao
@@ -16,7 +15,7 @@ public interface MemberDao {
      *
      * @return 成员列表
      */
-    List<Member> getAllMembers();
+    Page<Member> getAllMembers();
 
     /**
      * 按页获取成员
@@ -25,7 +24,7 @@ public interface MemberDao {
      * @param pageSize 每页大小
      * @return 成员列表
      */
-    List<Member> getMembersByPage(int pageNum, int pageSize);
+    Page<Member> getMembersByPage(int pageNum, int pageSize);
 
     /**
      * 按成员Id获取成员信息
@@ -36,11 +35,14 @@ public interface MemberDao {
     Member getMemberById(int id);
 
     /**
-     * 获取成员总数
+     * 按部门Id获取成员
      *
-     * @return 成员数量
+     * @param departmentId 部门Id
+     * @param pageNum 第N页
+     * @param pageSize 每页大小
+     * @return 教师列表
      */
-    Integer getMemberCounts();
+    Page<Member> getMemberByDepartment(int departmentId, int pageNum, int pageSize);
 
     /**
      * 根据姓名搜索成员
@@ -50,15 +52,8 @@ public interface MemberDao {
      * @param pageSize 每页大小
      * @return 搜索结果列表
      */
-    List<Member> searchMemberByName(String name, int pageNum, int pageSize);
+    Page<Member> searchMemberByName(String name, int pageNum, int pageSize);
 
-    /**
-     * 获取搜索结果总数
-     *
-     * @param name 搜索姓名
-     * @return 结果总数
-     */
-    Integer getSearchCounts(String name);
 
     /**
      * 添加一个成员
@@ -70,18 +65,8 @@ public interface MemberDao {
     /**
      * 根据成员Id删除一个成员
      *
-     * @param id 成员Id
+     * @param member 成员
      */
-    void deleteMember(int id);
-
-    /**
-     * 获取部门所有教师
-     *
-     * @param departmentId 部门Id
-     * @return 教师列表
-     */
-    List<Member> getTeacherMember(int departmentId);
-
-    //List<Member> getMembersByMemberId(int memberId);
+    void deleteMember(Member member);
 
 }
