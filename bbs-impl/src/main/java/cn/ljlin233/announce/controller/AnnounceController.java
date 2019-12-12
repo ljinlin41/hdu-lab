@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.announce.dto.DeleteAnnounceRequestDto;
 import cn.ljlin233.announce.dto.InsertAnnounceRequestDto;
 import cn.ljlin233.announce.dto.UpdateAnnounceRequestDto;
 import cn.ljlin233.announce.entity.Announce;
@@ -35,8 +36,8 @@ public class AnnounceController {
      */
     @GetMapping(value = "/announces")
     public Page<Announce> getAllAnnounce() {
-        Page<Announce> announcePage = announceService.getAllAnnounces();
-        return announcePage;
+
+        return announceService.getAllAnnounces();
     }
 
     /**
@@ -48,9 +49,7 @@ public class AnnounceController {
     @GetMapping(value = "/announces", params = "page")
     public Page<Announce> getAnnouncesByPage(@RequestParam int page) {
 
-        Page<Announce> announcesByPage = announceService.getAnnouncesByPage(page, 10);
-
-        return announcesByPage;
+        return announceService.getAnnouncesByPage(page, 10);
     }
 
     /**
@@ -59,12 +58,10 @@ public class AnnounceController {
      * @param id 通知Id
      * @return result
      */
-    @PreAuthorize("hasRole('student') and authentication.principal.getUserId() == 1")
     @GetMapping(value = "/announces", params = "id")
     public Announce getAnnounceById(@RequestParam int id) {
-        Announce announce = announceService.getAnnounceById(id);
 
-        return announce;
+        return announceService.getAnnounceById(id);
     }
 
     /**
@@ -76,9 +73,8 @@ public class AnnounceController {
      */
     @GetMapping(value = "/announces", params = {"search", "page"})
     public Page<Announce> searchAnnounces(@RequestParam String search, @RequestParam int page) {
-        Page<Announce> announcePage = announceService.searchAnnounces(search, page, 10);
 
-        return announcePage;
+        return announceService.searchAnnounces(search, page, 10);
     }
 
     /**
@@ -86,8 +82,8 @@ public class AnnounceController {
      *
      * @param request request
      */
-    @PreAuthorize("hasRole('teacher')")
     @PostMapping(value = "/announces")
+    @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
     public void addAnnounce(@RequestBody InsertAnnounceRequestDto request) {
 
         announceService.addAnnounce(request);
@@ -96,25 +92,24 @@ public class AnnounceController {
     /**
      * 更新一个通知
      *
-     * @param id 通知id
      * @param request request
      */
-    @PreAuthorize("hasRole('teacher')")
-    @PutMapping(value = "/announces", params = "id")
-    public void updateAnnounce(@RequestParam int id, @RequestBody UpdateAnnounceRequestDto request) {
+    @PutMapping(value = "/announces")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
+    public void updateAnnounce(@RequestBody UpdateAnnounceRequestDto request) {
 
-        announceService.updateAnnounce(id, request);
+        announceService.updateAnnounce(request);
     }
 
     /**
      * 删除一个通知
      *
-     * @param id 通知Id
+     * @param request request
      */
-    @PreAuthorize("hasRole('teacher')")
-    @DeleteMapping(value = "/announces", params = "id")
-    public void deleteAnnounce(@RequestParam int id) {
-        announceService.deleteAnnounce(id);
+    @DeleteMapping(value = "/announces")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
+    public void deleteAnnounce(@RequestBody DeleteAnnounceRequestDto request) {
+        announceService.deleteAnnounce(request.getAnnounceId());
     }
 
 }

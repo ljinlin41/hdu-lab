@@ -83,7 +83,8 @@ public class AchievementDaoImpl implements AchievementDao {
     }
 
     @Override
-    public void deleteAchievement(int id) {
-        achievementMapper.deleteByPrimaryKey(id);
+    public void deleteAchievement(Achievement achievement) {
+
+        achievementMapper.delete(achievement);
     }
 }

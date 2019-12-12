@@ -25,4 +25,8 @@ public class UpdateAnnounceRequestDto {
      * 附件路径
      */
     private String savePath;
+
+    private Integer announceId;
+
+    private Integer upUserId;
 }

@@ -3,7 +3,6 @@ package cn.ljlin233.announce.dao.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -55,8 +54,7 @@ public class AnnounceDaoImpl implements AnnounceDao {
     @Override
     public Announce getAnnounceById(int id) {
 
-        Announce announce = announceMapper.selectByPrimaryKey(id);
-        return announce;
+        return announceMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -87,17 +85,8 @@ public class AnnounceDaoImpl implements AnnounceDao {
     }
 
     @Override
-    public void deleteAnnounce(int id) {
-        announceMapper.deleteByPrimaryKey(id);
+    public void deleteAnnounce(Announce announce) {
+        announceMapper.delete(announce);
     }
 
-    @Override
-    public void addVisitCount(Announce announce) {
-
-        Announce announceNew = new Announce();
-        BeanUtils.copyProperties(announce, announceNew);
-        announceNew.setVisitCount(announce.getVisitCount() + 1);
-
-        announceMapper.updateByPrimaryKey(announceNew);
-    }
 }

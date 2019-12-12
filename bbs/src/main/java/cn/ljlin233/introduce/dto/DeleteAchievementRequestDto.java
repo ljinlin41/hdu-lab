@@ -5,15 +5,11 @@ import lombok.Data;
 
 /**
  * @author lvjinlin42@foxmail.com
- * @date 2019/12/11 20:30
+ * @date 2019/12/12 16:49
  */
 @Data
 @Builder
-public class UpdateAchievementRequestDto {
-
-    private String title;
-
-    private String content;
+public class DeleteAchievementRequestDto {
 
     private Integer upUserId;
 

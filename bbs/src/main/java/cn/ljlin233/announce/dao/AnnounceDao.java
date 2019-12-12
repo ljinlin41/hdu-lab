@@ -61,15 +61,7 @@ public interface AnnounceDao {
     /**
      * 删除公告
      *
-     * @param id 公告Id
-     */
-    void deleteAnnounce(int id);
-
-    /**
-     * 增加公告的访问数
-     *
      * @param announce 公告
      */
-    void addVisitCount(Announce announce);
-
+    void deleteAnnounce(Announce announce);
 }

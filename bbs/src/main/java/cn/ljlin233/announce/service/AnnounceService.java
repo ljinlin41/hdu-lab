@@ -56,10 +56,9 @@ public interface AnnounceService {
     /**
      * 更新一个通知
      *
-     * @param id 通知Id
      * @param request 请求
      */
-    void updateAnnounce(int id, UpdateAnnounceRequestDto request);
+    void updateAnnounce(UpdateAnnounceRequestDto request);
 
     /**
      * 删除一个通知

@@ -61,7 +61,7 @@ public interface AchievementDao {
     /**
      * 删除一个成果
      *
-     * @param id 成果Id
+     * @param achievement 成果
      */
-    void deleteAchievement(int id);
+    void deleteAchievement(Achievement achievement);
 }

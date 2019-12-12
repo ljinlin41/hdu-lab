@@ -92,9 +92,12 @@ public class AchievementServiceImpl implements AchievementService {
 
 
     @Override
-    public void updateAchievement(int id, UpdateAchievementRequestDto request) {
+    public void updateAchievement(UpdateAchievementRequestDto request) {
         try {
-            Achievement achievement = Achievement.builder().id(id).title(request.getTitle()).content(
+            Achievement achievement = Achievement.builder()
+                .id(request.getAchievementId())
+                .title(request.getTitle())
+                .content(
                 request.getContent()).build();
 
             achievementDao.updateAchievement(achievement);
@@ -105,8 +108,11 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public void deleteAchievement(int id) {
+
         try {
-            achievementDao.deleteAchievement(id);
+
+            Achievement achievement = achievementDao.getAchievementById(id);
+            achievementDao.deleteAchievement(achievement);
         } catch (Exception e) {
             throw new SystemException("删除研究成果失败!", e.getMessage());
         }

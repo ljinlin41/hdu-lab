@@ -1,7 +1,5 @@
 package cn.ljlin233.announce.service.impl;
 
-import java.time.LocalDateTime;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,10 +10,10 @@ import cn.ljlin233.announce.dto.InsertAnnounceRequestDto;
 import cn.ljlin233.announce.dto.UpdateAnnounceRequestDto;
 import cn.ljlin233.announce.entity.Announce;
 import cn.ljlin233.announce.service.AnnounceService;
-import cn.ljlin233.user.entity.UserInfo;
-import cn.ljlin233.user.service.UserInfoService;
 import cn.ljlin233.util.Page;
 import cn.ljlin233.util.common.DateUtil;
+import cn.ljlin233.util.common.UserContext;
+import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.QueryException;
 import cn.ljlin233.util.exception.entity.SystemException;
 
@@ -31,8 +29,6 @@ public class AnnounceServiceImpl implements AnnounceService {
     @Autowired
     private AnnounceDao announceDao;
 
-    @Autowired
-    private UserInfoService userInfoService;
 
     @Override
     public Page<Announce> getAllAnnounces() {
@@ -66,7 +62,7 @@ public class AnnounceServiceImpl implements AnnounceService {
         try {
             announce = announceDao.getAnnounceById(id);
             // 增加一个浏览记录
-            announceDao.addVisitCount(announce);
+            addVisitCount(announce);
         } catch (Exception e) {
             throw new QueryException("failed to get announce by Id", e.getMessage());
         }
@@ -91,10 +87,12 @@ public class AnnounceServiceImpl implements AnnounceService {
     public void addAnnounce(InsertAnnounceRequestDto request) {
 
         // 获取上传用户信息
-        UserInfo info = userInfoService.getUserInfo(request.getUpUserId());
+        UserContext userContext = UserContextUtil.getUserContext();
 
-        Announce announce = Announce.builder().upUserNickname(info.getNickname()).upDate(
-            DateUtil.getInstance().format(LocalDateTime.now())).build();
+        Announce announce = Announce.builder()
+            .upUserNickname(userContext.getNickName())
+            .upDate(DateUtil.getNow())
+            .build();
         BeanUtils.copyProperties(request, announce);
 
         try {
@@ -105,9 +103,10 @@ public class AnnounceServiceImpl implements AnnounceService {
     }
 
     @Override
-    public void updateAnnounce(int id, UpdateAnnounceRequestDto request) {
-        Announce announce = Announce.builder().id(id).build();
-        BeanUtils.copyProperties(request, announce);
+    public void updateAnnounce(UpdateAnnounceRequestDto request) {
+        Announce announce = Announce.builder().id(request.getAnnounceId()).title(request.getTitle()).content(
+            request.getContent()).savePath(request.getSavePath()).build();
+
 
         try {
             announceDao.updateAnnounce(announce);
@@ -118,11 +117,21 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     @Override
     public void deleteAnnounce(int id) {
+
         try {
-            announceDao.deleteAnnounce(id);
+            Announce announce = getAnnounceById(id);
+            announceDao.deleteAnnounce(announce);
         } catch (Exception e) {
             throw new SystemException("failed to delete announce", e.getMessage());
         }
+    }
+
+    private void addVisitCount(Announce announce) {
+
+        Announce newAnnounce = Announce.builder().id(announce.getId()).visitCount(announce.getVisitCount() + 1).build();
+
+        announceDao.updateAnnounce(newAnnounce);
+
     }
 
 }

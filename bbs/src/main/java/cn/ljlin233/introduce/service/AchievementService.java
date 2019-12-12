@@ -57,10 +57,9 @@ public interface AchievementService {
     /**
      * 更新成果
      *
-     * @param id 成果id
-     * @param request 成果
+     * @param request 请求
      */
-    void updateAchievement(int id, UpdateAchievementRequestDto request);
+    void updateAchievement(UpdateAchievementRequestDto request);
 
     /**
      * 删除成果

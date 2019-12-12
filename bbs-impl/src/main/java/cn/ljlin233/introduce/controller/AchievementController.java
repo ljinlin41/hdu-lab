@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.DeleteAchievementRequestDto;
 import cn.ljlin233.introduce.dto.InsertAchievementRequestDto;
 import cn.ljlin233.introduce.dto.UpdateAchievementRequestDto;
 import cn.ljlin233.introduce.entity.Achievement;
@@ -54,8 +55,8 @@ public class AchievementController {
     /**
      * 增加一个成就
      */
-    @PreAuthorize("hasRole('teacher')")
     @PostMapping(value = "/achievements")
+    @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
     public void addAchievement(@RequestBody InsertAchievementRequestDto request) {
 
         achievementService.addAchievement(request);
@@ -89,22 +90,22 @@ public class AchievementController {
     /**
      * 更新成就
      */
-    @PreAuthorize("hasRole('teacher')")
-    @PutMapping(value = "/achievements", params = "id")
-    public void updateAchievement(@RequestParam int id, @RequestBody UpdateAchievementRequestDto request) {
+    @PutMapping(value = "/achievements")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
+    public void updateAchievement(@RequestBody UpdateAchievementRequestDto request) {
 
-        achievementService.updateAchievement(id, request);
+        achievementService.updateAchievement(request);
     }
 
     /**
-     * 成就
+     * 删除成就
      *
-     * @param id id
+     * @param request 请求
      */
-    @PreAuthorize("hasRole('teacher')")
-    @DeleteMapping(value = "/achievements", params = "id")
-    public void deleteAchievement(@RequestParam int id) {
-        achievementService.deleteAchievement(id);
+    @DeleteMapping(value = "/achievements")
+    @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
+    public void deleteAchievement(@RequestBody DeleteAchievementRequestDto request) {
+        achievementService.deleteAchievement(request.getAchievementId());
     }
 
 }
