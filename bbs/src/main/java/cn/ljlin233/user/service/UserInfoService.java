@@ -1,5 +1,6 @@
 package cn.ljlin233.user.service;
 
+import cn.ljlin233.user.dto.UpdateUserInfoRequestDto;
 import cn.ljlin233.user.entity.UserInfo;
 
 /**
@@ -17,20 +18,13 @@ public interface UserInfoService {
      */
     UserInfo getUserInfo(int id);
 
-    /**
-     * 更新用户昵称
-     *
-     * @param userId 用户Id
-     * @param newname 新昵称
-     */
-    void updateNickname(int userId, String newname);
 
     /**
      * 更新用户信息
      *
-     * @param userInfo 用户信息
+     * @param request request
      */
-    void updateUserInfo(UserInfo userInfo);
+    void updateUserInfo(UpdateUserInfoRequestDto request);
 
     /**
      * 删除用户

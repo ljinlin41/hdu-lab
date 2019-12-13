@@ -4,9 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * UserInfo
@@ -14,8 +13,7 @@ import lombok.NoArgsConstructor;
  * @author lvjinlin42@foxmail.com
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Table(name = "user_info")
 public class UserInfo {
 
@@ -24,7 +22,7 @@ public class UserInfo {
     private Integer id;
 
     @Column(name = "account")
-    private String account;
+    private Integer account;
 
     @Column(name = "email")
     private String email;

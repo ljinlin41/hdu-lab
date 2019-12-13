@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import cn.ljlin233.user.dao.UserTokenDao;
+import cn.ljlin233.user.dto.MyUserDetail;
 import cn.ljlin233.user.entity.UserToken;
 import lombok.extern.slf4j.Slf4j;
 

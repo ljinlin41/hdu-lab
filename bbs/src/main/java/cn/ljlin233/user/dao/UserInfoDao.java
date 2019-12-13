@@ -1,7 +1,5 @@
 package cn.ljlin233.user.dao;
 
-import java.util.List;
-
 import cn.ljlin233.user.entity.UserInfo;
 
 /**
@@ -35,14 +33,7 @@ public interface UserInfoDao {
      */
     void updateUserInfo(UserInfo userInfo);
 
-    /**
-     * 按页获取所有用户信息
-     *
-     * @param pageNum 第N页
-     * @param pageSize 每页大小
-     * @return 用户信息列表
-     */
-    List<UserInfo> getAllUserInfo(int pageNum, int pageSize);
+
 
     /**
      * 根据用户Id获取用户信息
@@ -103,11 +94,8 @@ public interface UserInfoDao {
     /**
      * 更新其他表中冗余的nickname
      *
-     * @param tableName
-     * @param nameCol
-     * @param newName
-     * @param idCol
-     * @param userId
+     * @param userId 用户id
+     * @param name name
      */
-    void updateUsername(String tableName, String nameCol, String newName, String idCol, int userId);
+    void updateUsername(int userId, String name);
 }

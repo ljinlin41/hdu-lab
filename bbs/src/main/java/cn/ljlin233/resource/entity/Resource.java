@@ -4,9 +4,8 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * Resource
@@ -14,8 +13,7 @@ import lombok.NoArgsConstructor;
  * @author lvjinlin42@foxmail.com
  */
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Table(name = "res_resource")
 public class Resource {
 
