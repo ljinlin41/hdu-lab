@@ -1,131 +1,111 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.DeleteDepartmentRequestDto;
+import cn.ljlin233.introduce.dto.InsertDepartmentRequestDto;
+import cn.ljlin233.introduce.dto.UpdateDepartmentRequestDto;
 import cn.ljlin233.introduce.entity.Department;
-import cn.ljlin233.introduce.entity.DepartmentResponse;
-import cn.ljlin233.introduce.entity.Member;
-import cn.ljlin233.introduce.entity.MemberResponse;
 import cn.ljlin233.introduce.service.DepartmentService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
  * DepartmentController
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class DepartmentController {
 
-    private DepartmentService departmentService;
-
-    public DepartmentController() {}
 
     @Autowired
-    public DepartmentController(DepartmentService departmentService) {
-        this.departmentService = departmentService;
+    private DepartmentService departmentService;
+
+    @GetMapping(value = "/departments")
+    public Page<Department> getAllDepartments() {
+
+        return departmentService.getAllDepartments();
     }
 
-    // 增加一个部门
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/departments", method = RequestMethod.POST)
-    public void addDepartment(HttpServletRequest request) {
+    /**
+     * 按页获取所有部门
+     *
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/departments", params = "page")
+    public Page<Department> getDepartmentsByPage(@RequestParam int page) {
 
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-
-        departmentService.addDepartment(name, description);
-
+        return departmentService.getDepartmentsPage(page, 10);
     }
 
-    @RootAuth
-    @RequestMapping(value = "/departments", method = RequestMethod.GET)
-    @ResponseBody
-    public DepartmentResponse getAllDepartments() {
-
-        List<Department> all = departmentService.getAllDepartments();
-        int count = departmentService.getDepartmentCount();
-
-        return new DepartmentResponse(count, all);
-    }
-
-    // 按页获取所有部门
-    @RequestMapping(value = "/departments", params = "page", method = RequestMethod.GET)
-    @ResponseBody
-    public DepartmentResponse getDepartmentsByPage(@RequestParam int page) {
-
-        List<Department> all = departmentService.getDepartmentsPage(page, 10);
-        int count = departmentService.getDepartmentCount();
-
-        return new DepartmentResponse(count, all);
-    }
-
-    // 获取部门详情
-    @RequestMapping(value = "/departments", params = "id", method = RequestMethod.GET)
-    @ResponseBody
+    /**
+     * 获取部门详情
+     *
+     * @param id 部门Id
+     * @return result
+     */
+    @GetMapping(value = "/departments", params = "id")
     public Department getDepartmentsById(@RequestParam int id) {
 
-        Department result = departmentService.getDepartmentById(id);
-        return result;
+        return departmentService.getDepartmentById(id);
     }
 
-    // 搜索部门
-    @RequestMapping(value = "/departments", params = {"search", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public DepartmentResponse searchDepartments(@RequestParam String search, @RequestParam int page) {
+    /**
+     * 搜索部门
+     *
+     * @param search 搜索名称
+     * @param page 第N页
+     * @return result
+     */
+    @GetMapping(value = "/departments", params = {"search", "page"})
+    public Page<Department> searchDepartments(@RequestParam String search, @RequestParam int page) {
 
-        List<Department> all = departmentService.searchDepartments(search, page, 10);
-        int count = departmentService.getSearchCount(search);
-
-        return new DepartmentResponse(count, all);
+        return departmentService.searchDepartments(search, page, 10);
     }
 
-    // 部门成员列表
-    @RequestMapping(value = "/members", params = {"departmentId", "page"}, method = RequestMethod.GET)
-    @ResponseBody
-    public MemberResponse searchDepartments(@RequestParam int departmentId, @RequestParam int page) {
+    /**
+     * 增加一个部门
+     *
+     * @param request request
+     */
+    @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
+    @PostMapping(value = "/departments")
+    public void addDepartment(@RequestBody InsertDepartmentRequestDto request) {
 
-        List<Member> all = departmentService.getDepartmentMember(departmentId, page, 10);
-        int count = departmentService.getMembersCount(departmentId);
-
-        return new MemberResponse(count, all);
+        departmentService.addDepartment(request);
     }
 
-    // 修改部门信息
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/departments", params = "id", method = RequestMethod.PUT)
-    public void updateDepartments(@RequestParam int id, HttpServletRequest request) {
+    /**
+     * 修改部门信息
+     *
+     * @param request request
+     */
+    @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
+    @PutMapping(value = "/departments")
+    public void updateDepartments(@RequestBody UpdateDepartmentRequestDto request) {
 
-        String name = request.getParameter("name");
-        String description = request.getParameter("description");
-
-        Department department = new Department();
-        department.setName(name);
-        department.setDescription(description);
-
-        departmentService.updateDepartment(department);
-
+        departmentService.updateDepartment(request);
     }
 
-    // 删除
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/departments", params = "id", method = RequestMethod.DELETE)
-    public void deleteDepartments(@RequestParam int id) {
+    /**
+     * 删除
+     *
+     * @param request request
+     */
+    @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
+    @DeleteMapping(value = "/departments")
+    public void deleteDepartments(@RequestBody DeleteDepartmentRequestDto request) {
 
-        departmentService.deleteDepartment(id);
+        departmentService.deleteDepartment(request.getId());
     }
 }

@@ -1,90 +1,49 @@
 package cn.ljlin233.introduce.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import cn.ljlin233.introduce.dto.InsertApplyRequestDto;
 import cn.ljlin233.introduce.entity.Apply;
 import cn.ljlin233.introduce.service.ApplyService;
-import cn.ljlin233.user.service.UserTokenService;
-import cn.ljlin233.util.auth.AdminAuth;
-import cn.ljlin233.util.auth.MyselfAuth;
-import cn.ljlin233.util.auth.RootAuth;
-import cn.ljlin233.util.auth.StudentAuth;
-import cn.ljlin233.util.auth.TeacherAuth;
+import cn.ljlin233.util.Page;
 
 /**
- * ApplyController
+ * ApplyController TODO 流程未完善
+ * @author lvjinlin42@foxmail.com
  */
-@Controller
+@RestController
 @RequestMapping("/api")
 public class ApplyController {
 
+    @Autowired
     private ApplyService applyService;
 
-    @Autowired
-    private UserTokenService userTokenService;
+    @PreAuthorize("hasAnyRole('teacher','admin', 'root') or authentication.principal.getUserId == #userId")
+    @GetMapping(value = "/apply", params = "userId")
+    public Page<Apply> getApplyByUserId(@RequestParam int userId) {
 
-    public ApplyController() {}
-
-    @Autowired
-    public ApplyController(ApplyService applyService) {
-
-        this.applyService = applyService;
+        return applyService.getApplyByUserId(userId);
     }
 
-    @MyselfAuth(tableName = "intro_apply", column = "user_id")
-    @TeacherAuth
-    @AdminAuth
-    @RootAuth
-    @RequestMapping(value = "/applys", params = "userId", method = RequestMethod.GET)
-    @ResponseBody
-    public List<Apply> getApplysByUserId(@RequestParam int userId) {
+    @PreAuthorize("hasAnyRole('student', 'teacher','admin', 'root')")
+    @PostMapping(value = "/apply")
+    public void addApply(@RequestBody InsertApplyRequestDto request) {
 
-        List<Apply> applys = applyService.getApplyByUserId(userId);
-
-        return applys;
+        applyService.addApply(request);
     }
 
-    @StudentAuth
-    @TeacherAuth
-    @RootAuth
-    @AdminAuth
-    @RequestMapping(value = "/applys", method = RequestMethod.POST)
-    public void addApply(HttpServletRequest request) {
-        Integer userId = 0;
-        Integer departmentId = 0;
-        if (request.getParameter("userId") != null) {
-            userId = Integer.valueOf(request.getParameter("userId"));
-        }
-        if (request.getParameter("departmentId") != null) {
-            departmentId = Integer.valueOf(request.getParameter("departmentId"));
-        }
-        String username = request.getParameter("username");
-        String applyType = request.getParameter("applyType");
+    @PreAuthorize("hasAnyRole('teacher','admin', 'root')")
+    @GetMapping(value = "/apply/pending", params = "teacherId")
+    public Page<Apply> getPendingApply(@RequestParam int teacherId) {
 
-        applyService.addApply(userId, username, applyType, departmentId);
-    }
-
-    @StudentAuth
-    @TeacherAuth
-    @RootAuth
-    @AdminAuth
-    @RequestMapping(value = "/applys/unhandle", method = RequestMethod.GET)
-    @ResponseBody
-    public List<Apply> getUnhandleApply(HttpServletRequest request) {
-        //Integer userId = userTokenService.getUserid(request.getHeader("token"));
-
-        List<Apply> applies = applyService.getUnhandleApply(123);
-
-        return applies;
+        return applyService.getPendingApply(teacherId);
     }
 
 }

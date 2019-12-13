@@ -1,9 +1,9 @@
 package cn.ljlin233.introduce.service;
 
-import java.util.List;
-
+import cn.ljlin233.introduce.dto.InsertDepartmentRequestDto;
+import cn.ljlin233.introduce.dto.UpdateDepartmentRequestDto;
 import cn.ljlin233.introduce.entity.Department;
-import cn.ljlin233.introduce.entity.Member;
+import cn.ljlin233.util.Page;
 
 /**
  * DepartmentService
@@ -15,17 +15,16 @@ public interface DepartmentService {
     /**
      * 增加一个部门
      *
-     * @param name 部门名称
-     * @param description 部门描述
+     * @param request request
      */
-    void addDepartment(String name, String description);
+    void addDepartment(InsertDepartmentRequestDto request);
 
     /**
      * 获取所有部门
      *
      * @return 部门列表
      */
-    List<Department> getAllDepartments();
+    Page<Department> getAllDepartments();
 
     /**
      * 按页获取部门
@@ -34,7 +33,7 @@ public interface DepartmentService {
      * @param pageSize 每页大小
      * @return 部门列表
      */
-    List<Department> getDepartmentsPage(int pageNum, int pageSize);
+    Page<Department> getDepartmentsPage(int pageNum, int pageSize);
 
     /**
      * 根据部门Id获取部门
@@ -44,12 +43,6 @@ public interface DepartmentService {
      */
     Department getDepartmentById(int id);
 
-    /**
-     * 获取部门总数
-     *
-     * @return 部门总数
-     */
-    int getDepartmentCount();
 
     /**
      * 搜索部门名称
@@ -59,22 +52,16 @@ public interface DepartmentService {
      * @param pageSize 每页大小
      * @return 搜索结果列表
      */
-    List<Department> searchDepartments(String keywords, int pageNum, int pageSize);
+    Page<Department> searchDepartments(String keywords, int pageNum, int pageSize);
 
-    /**
-     * 部门搜索结果数
-     *
-     * @param keywords 部门名称
-     * @return 搜索结果数
-     */
-    int getSearchCount(String keywords);
 
     /**
      * 更新部门
      *
-     * @param department 部门
+     * @param request request
      */
-    void updateDepartment(Department department);
+    void updateDepartment(UpdateDepartmentRequestDto request);
+
 
     /**
      * 删除部门
@@ -83,21 +70,4 @@ public interface DepartmentService {
      */
     void deleteDepartment(int id);
 
-    /**
-     * 按页获取部门成员
-     *
-     * @param id 部门Id
-     * @param pageNum 第N页
-     * @param pageSize 每页大小
-     * @return 成员列表
-     */
-    List<Member> getDepartmentMember(int id, int pageNum, int pageSize);
-
-    /**
-     * 获取部门成员数
-     *
-     * @param departmentId 部门Id
-     * @return 部门成员数
-     */
-    int getMembersCount(int departmentId);
 }

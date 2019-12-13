@@ -44,7 +44,6 @@ public class MemberServiceImpl implements MemberService {
     }
 
 
-
     @Override
     public Member getMemberById(int id) {
         Member result;

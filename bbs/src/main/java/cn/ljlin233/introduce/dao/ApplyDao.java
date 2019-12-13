@@ -1,8 +1,9 @@
 package cn.ljlin233.introduce.dao;
 
-import java.util.List;
+import java.util.Collection;
 
 import cn.ljlin233.introduce.entity.Apply;
+import cn.ljlin233.util.Page;
 
 /**
  * ApplyDao
@@ -39,14 +40,14 @@ public interface ApplyDao {
      * @param userId 用户Id
      * @return 用户申请列表
      */
-    List<Apply> getApplyByUserId(int userId);
+    Page<Apply> getApplyByUserId(int userId);
 
     /**
-     * 根据部门Id列表获取所有未处理的申请
+     * 根据部门Id集合获取所有未处理的申请
      *
-     * @param departmentIdList 部门Id列表
+     * @param departmentIds 部门Id集合
      * @return 申请列表
      */
-    List<Apply> getUnhandleApply(List<Integer> departmentIdList);
+    Page<Apply> getPendingApply(Collection<Integer> departmentIds);
 
 }

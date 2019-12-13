@@ -51,6 +51,17 @@ public class MemberDaoImpl implements MemberDao {
     }
 
     @Override
+    public Page<Member> getMembersByMemberId(int memberId) {
+
+        Member member = Member.builder().memberId(memberId).build();
+
+        List<Member> memberList = memberMapper.select(member);
+        PageInfo<Member> memberPageInfo = new PageInfo<>(memberList);
+
+        return Page.<Member>builder().totalNum(memberPageInfo.getTotal()).data(new ArrayList<>(memberList)).build();
+    }
+
+    @Override
     public Page<Member> getMemberByDepartment(int departmentId, int pageNum, int pageSize) {
 
         Member member = Member.builder().departmentId(departmentId).build();
@@ -61,6 +72,17 @@ public class MemberDaoImpl implements MemberDao {
 
         return Page.<Member>builder().totalNum(memberPageInfo.getTotal()).pageNum(pageNum).pageSize(pageSize).data(
             new ArrayList<>(memberList)).build();
+    }
+
+    @Override
+    public Page<Member> getTeacherByDepartment(int departmentId) {
+
+        Member member = Member.builder().departmentId(departmentId).memberType("teacher").build();
+
+        List<Member> memberList = memberMapper.select(member);
+        PageInfo<Member> memberPageInfo = new PageInfo<>(memberList);
+
+        return Page.<Member>builder().totalNum(memberPageInfo.getTotal()).data(new ArrayList<>(memberList)).build();
     }
 
     @Override

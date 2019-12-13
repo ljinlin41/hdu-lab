@@ -1,8 +1,8 @@
 package cn.ljlin233.introduce.service;
 
-import java.util.List;
-
+import cn.ljlin233.introduce.dto.InsertApplyRequestDto;
 import cn.ljlin233.introduce.entity.Apply;
+import cn.ljlin233.util.Page;
 
 /**
  * ApplyService
@@ -14,12 +14,9 @@ public interface ApplyService {
     /**
      * 添加一个申请
      *
-     * @param userId 申请人Id
-     * @param username 申请人姓名
-     * @param applyType 申请类型(学生，教师)
-     * @param departmentId 申请部门Id
+     * @param request request
      */
-    void addApply(int userId, String username, String applyType, int departmentId);
+    void addApply(InsertApplyRequestDto request);
 
     /**
      * 根据申请Id获取申请
@@ -35,22 +32,15 @@ public interface ApplyService {
      * @param userId 用户Id
      * @return 申请列表
      */
-    List<Apply> getApplyByUserId(int userId);
+    Page<Apply> getApplyByUserId(int userId);
+
 
     /**
-     * 更新申请表状态
+     * 获取教师所有未处理的申请表
      *
-     * @param id 申请Id
-     * @param applyStatus 申请表状态
-     */
-    void updateApply(int id, String applyStatus);
-
-    /**
-     * 获取用户所有未处理的申请表
-     *
-     * @param userId 用户Id
+     * @param teacherId 教师Id
      * @return 申请列表
      */
-    List<Apply> getUnhandleApply(int userId);
+    Page<Apply> getPendingApply(int teacherId);
 
 }
