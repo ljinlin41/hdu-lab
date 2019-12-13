@@ -1,6 +1,8 @@
 package cn.ljlin233.introduce.service;
 
+import cn.ljlin233.introduce.dto.AcceptApplyRequestDto;
 import cn.ljlin233.introduce.dto.InsertApplyRequestDto;
+import cn.ljlin233.introduce.dto.RejectApplyRequestDto;
 import cn.ljlin233.introduce.entity.Apply;
 import cn.ljlin233.util.Page;
 
@@ -43,4 +45,17 @@ public interface ApplyService {
      */
     Page<Apply> getPendingApply(int teacherId);
 
+    /**
+     * 接受申请
+     *
+     * @param request request
+     */
+    void acceptApply(AcceptApplyRequestDto request);
+
+    /**
+     * 拒绝申请
+     *
+     * @param request request
+     */
+    void rejectApply(RejectApplyRequestDto request);
 }

@@ -16,7 +16,6 @@ import cn.ljlin233.user.dao.UserInfoDao;
 import cn.ljlin233.user.dao.UserOriginDao;
 import cn.ljlin233.user.dao.UserRoleDao;
 import cn.ljlin233.user.service.UserRegisterService;
-import cn.ljlin233.util.email.service.ActiveEmailService;
 import cn.ljlin233.util.exception.entity.DataCheckedException;
 import cn.ljlin233.util.exception.entity.SystemException;
 import cn.ljlin233.util.verification.service.VerificationService;
@@ -36,20 +35,18 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     private UserOriginDao userOriginDao;
     private VerificationService verificationService;
     private SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private ActiveEmailService activeEmailService;
 
     public UserRegisterServiceImpl() {}
 
     @Autowired
     public UserRegisterServiceImpl(UserInfoDao userInfoDao, UserAuthsDao userAuthsDao, UserRoleDao userRoleDao,
-        UserOriginDao userOriginDao, VerificationService verificationService, ActiveEmailService activeEmailService) {
+        UserOriginDao userOriginDao, VerificationService verificationService) {
 
         this.userInfoDao = userInfoDao;
         this.userAuthsDao = userAuthsDao;
         this.userRoleDao = userRoleDao;
         this.userOriginDao = userOriginDao;
         this.verificationService = verificationService;
-        this.activeEmailService = activeEmailService;
     }
 
     @Override

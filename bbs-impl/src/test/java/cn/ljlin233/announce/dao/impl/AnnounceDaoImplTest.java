@@ -49,8 +49,6 @@ public class AnnounceDaoImplTest {
 
         Announce announce = announceDao.getAnnounceById(2);
 
-        announceDao.addVisitCount(announce);
-
         log.info(announce.toString());
     }
 
@@ -93,10 +91,5 @@ public class AnnounceDaoImplTest {
         announceDao.updateAnnounce(announce);
     }
 
-    @Test
-    public void deleteAnnounce() {
-
-        announceDao.deleteAnnounce(4);
-    }
 
 }

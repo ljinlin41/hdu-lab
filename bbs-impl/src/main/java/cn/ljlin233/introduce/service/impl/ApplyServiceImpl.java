@@ -13,14 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import cn.ljlin233.introduce.dao.ApplyDao;
 import cn.ljlin233.introduce.dao.MemberDao;
+import cn.ljlin233.introduce.dto.AcceptApplyRequestDto;
 import cn.ljlin233.introduce.dto.InsertApplyRequestDto;
+import cn.ljlin233.introduce.dto.RejectApplyRequestDto;
 import cn.ljlin233.introduce.entity.Apply;
 import cn.ljlin233.introduce.entity.Member;
 import cn.ljlin233.introduce.service.ApplyService;
 import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
 import cn.ljlin233.util.Page;
-import cn.ljlin233.util.exception.entity.DataCheckedException;
 import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
@@ -84,7 +85,6 @@ public class ApplyServiceImpl implements ApplyService {
     }
 
 
-
     @Override
     public Page<Apply> getPendingApply(int userId) {
 
@@ -99,35 +99,31 @@ public class ApplyServiceImpl implements ApplyService {
         return applyDao.getPendingApply(departmentIdSet);
     }
 
-    public void updateApply(int id, String applyStatus) {
-        Apply apply = Apply.builder().id(id).build();
-        // 数据校验
-        if (!(applyStatus.equals("已通过") || applyStatus.equals("已拒绝"))) {
-            throw new DataCheckedException("申请表状态错误");
-        } else {
-            apply.setApplyStatus(applyStatus);
-        }
-        // 更新Apply状态
-        try {
-            applyDao.updateApply(apply);
-        } catch (Exception e) {
-            throw new SystemException("更新入部申请失败", e.getMessage());
-        }
+    @Override
+    public void acceptApply(AcceptApplyRequestDto request) {
 
-        if (applyStatus.equals("已通过")) {
-            // 添加部门成员
-            Apply applyInfo = applyDao.getApplyById(id);
+        // 更新apply状态
+        Apply apply = Apply.builder().id(request.getApplyId()).applyStatus("已通过").build();
+        applyDao.updateApply(apply);
 
-            Member member = Member.builder()
-                .memberId(applyInfo.getUserId())
-                .memberType(applyInfo.getApplyType())
-                .memberName(applyInfo.getUsername())
-                .departmentId(applyInfo.getDepartmentId())
-                .build();
+        // 将成员加入对应部门
+        Apply applyInfo = applyDao.getApplyById(request.getApplyId());
 
-            memberDao.addMember(member);
-        }
+        Member member = Member.builder()
+            .memberId(applyInfo.getUserId())
+            .memberType(applyInfo.getApplyType())
+            .memberName(applyInfo.getUsername())
+            .departmentId(applyInfo.getDepartmentId())
+            .build();
 
+        memberDao.addMember(member);
+    }
+
+    @Override
+    public void rejectApply(RejectApplyRequestDto request) {
+        // 更新apply状态
+        Apply apply = Apply.builder().id(request.getApplyId()).applyStatus("已拒绝").build();
+        applyDao.updateApply(apply);
     }
 
     private void sendEmailToTeacher(List<Member> teacherList) {
