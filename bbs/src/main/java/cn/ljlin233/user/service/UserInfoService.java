@@ -18,6 +18,13 @@ public interface UserInfoService {
      */
     UserInfo getUserInfo(int id);
 
+    /**
+     * 根据账号获取用户信息
+     *
+     * @param account 账号
+     * @return userInfo
+     */
+    UserInfo getUserInfoByAccount(String account);
 
     /**
      * 更新用户信息

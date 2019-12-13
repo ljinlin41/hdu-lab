@@ -18,12 +18,13 @@ public class UserAuthsDaoImpl implements UserAuthsDao {
     private UserAuthsMapper userAuthsMapper;
 
     @Override
-    public void addUserAuths(int userId, String identityType, String identifier, String credential) {
+    public void addUserAuths(UserAuths userAuths) {
 
+        userAuthsMapper.insertSelective(userAuths);
     }
 
     @Override
-    public void deleteAuths(int userId) {
+    public void deleteAuthsByUserId(int userId) {
 
     }
 

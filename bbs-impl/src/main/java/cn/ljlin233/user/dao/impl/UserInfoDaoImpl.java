@@ -46,8 +46,8 @@ public class UserInfoDaoImpl implements UserInfoDao {
     private ResourceMapper resourceMapper;
 
     @Override
-    public void addUserInfo(String account, String email, String registerTime, String activeId) {
-
+    public void addUserInfo(UserInfo userInfo) {
+        userInfoMapper.insertSelective(userInfo);
     }
 
     @Override
@@ -66,6 +66,14 @@ public class UserInfoDaoImpl implements UserInfoDao {
     public UserInfo getUserInfoById(int id) {
 
         return userInfoMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public UserInfo getUserInfoByAccount(String account) {
+
+        UserInfo userInfo = UserInfo.builder().account(account).build();
+
+        return userInfoMapper.selectOne(userInfo);
     }
 
     @Override

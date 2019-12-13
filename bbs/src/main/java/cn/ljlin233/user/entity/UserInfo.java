@@ -22,7 +22,7 @@ public class UserInfo {
     private Integer id;
 
     @Column(name = "account")
-    private Integer account;
+    private String account;
 
     @Column(name = "email")
     private String email;

@@ -20,12 +20,12 @@ public class UserRoleDaoImpl implements UserRoleDao {
     private UserRoleMapper userRoleMapper;
 
     @Override
-    public void addUserRole(int userId, String role) {
-
+    public void addUserRole(UserRole userRole) {
+        userRoleMapper.insertSelective(userRole);
     }
 
     @Override
-    public void deleteUserRole(int userId) {
+    public void deleteUserRoleByUserId(int userId) {
 
     }
 

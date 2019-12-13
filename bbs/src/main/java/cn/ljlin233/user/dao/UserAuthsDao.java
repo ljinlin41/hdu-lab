@@ -12,19 +12,16 @@ public interface UserAuthsDao {
     /**
      * 增加用户授权
      *
-     * @param userId 用户Id
-     * @param identityType 账号类型
-     * @param identifier 账号
-     * @param credential 密码
+     * @param userAuths 用户授权
      */
-    void addUserAuths(int userId, String identityType, String identifier, String credential);
+    void addUserAuths(UserAuths userAuths);
 
     /**
      * 删除用户授权
      *
      * @param userId 用户Id
      */
-    void deleteAuths(int userId);
+    void deleteAuthsByUserId(int userId);
 
     /**
      * 根据账号获取用户授权

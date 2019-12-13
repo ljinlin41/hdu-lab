@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import cn.ljlin233.user.dao.UserAuthsDao;
 import cn.ljlin233.user.dao.UserInfoDao;
+import cn.ljlin233.user.dao.UserRoleDao;
 import cn.ljlin233.user.dto.UpdateUserInfoRequestDto;
 import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
@@ -22,6 +24,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
     private UserInfoDao userInfoDao;
 
+    @Autowired
+    private UserAuthsDao userAuthsDao;
+
+    @Autowired
+    private UserRoleDao userRoleDao;
 
     @Override
     public UserInfo getUserInfo(int id) {
@@ -29,6 +36,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         return userInfoDao.getUserInfoById(id);
     }
 
+    @Override
+    public UserInfo getUserInfoByAccount(String account) {
+        return userInfoDao.getUserInfoByAccount(account);
+    }
 
     @Override
     public void updateUserInfo(UpdateUserInfoRequestDto request) {
@@ -54,6 +65,9 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void deleteUser(int id) {
         try {
             userInfoDao.deleteUserInfo(id);
+            userAuthsDao.deleteAuthsByUserId(id);
+            userRoleDao.deleteUserRoleByUserId(id);
+
         } catch (Exception e) {
             throw new SystemException("删除用户失败", e.getMessage());
         }

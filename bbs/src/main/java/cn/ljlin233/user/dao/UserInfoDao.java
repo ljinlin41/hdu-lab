@@ -12,12 +12,9 @@ public interface UserInfoDao {
     /**
      * 添加用户信息
      *
-     * @param account 账号
-     * @param email 邮箱
-     * @param registerTime 注册时间
-     * @param activeId 激活码
+     * @param userInfo 用户信息
      */
-    void addUserInfo(String account, String email, String registerTime, String activeId);
+    void addUserInfo(UserInfo userInfo);
 
     /**
      * 删除用户信息
@@ -33,8 +30,6 @@ public interface UserInfoDao {
      */
     void updateUserInfo(UserInfo userInfo);
 
-
-
     /**
      * 根据用户Id获取用户信息
      *
@@ -42,6 +37,14 @@ public interface UserInfoDao {
      * @return 用户信息
      */
     UserInfo getUserInfoById(int id);
+
+    /**
+     * 根据用户账号获取用户信息
+     *
+     * @param account 用户账号
+     * @return 用户信息
+     */
+    UserInfo getUserInfoByAccount(String account);
 
     /**
      * 根据用户账户获取用户Id

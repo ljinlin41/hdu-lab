@@ -30,7 +30,7 @@ public interface UserOriginDao {
     Integer getUserOriginId(String account);
 
     /**
-     * 判断账号是否存再
+     * 判断账号是否存在
      *
      * @param account 账号
      * @return true or false

@@ -33,7 +33,7 @@ public class UserActiveServiceImpl implements UserActiveService {
         try {
             int id = userInfoDao.getUserIdByActiveId(activeId);
 
-            UserInfo userInfo = new UserInfo();
+            UserInfo userInfo = UserInfo.builder().build();
             userInfo.setId(id);
             userInfo.setActive(1);
 

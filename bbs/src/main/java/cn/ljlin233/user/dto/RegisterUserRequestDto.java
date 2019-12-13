@@ -11,11 +11,15 @@ import lombok.Data;
 @Builder
 public class RegisterUserRequestDto {
 
-    private Integer account;
+    private String account;
 
     private String password;
 
     private String role;
 
     private String email;
+
+    private String verificationId;
+
+    private String verificationCode;
 }

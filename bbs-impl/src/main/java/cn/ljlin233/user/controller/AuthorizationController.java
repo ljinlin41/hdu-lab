@@ -11,12 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.ljlin233.user.dto.RegisterUserRequestDto;
 import cn.ljlin233.user.dto.UserLoginRequestDto;
 import cn.ljlin233.user.entity.UserToken;
+import cn.ljlin233.user.service.AuthorizationService;
 import cn.ljlin233.user.service.UserActiveService;
-import cn.ljlin233.user.service.UserLoginService;
 
 /**
+ * AuthorizationController
  * @author lvjinlin42@foxmail.com
- * UserLoginController
  */
 @RestController
 @RequestMapping("/api")
@@ -25,19 +25,27 @@ public class AuthorizationController {
     @Autowired
     private UserActiveService userActiveService;
 
-    @Autowired
-    private UserLoginService userLoginService;
 
+    @Autowired
+    private AuthorizationService authorizationService;
+
+    /**
+     * 用户登录
+     *
+     * @param request request
+     * @return result
+     */
     @PostMapping(value = "/login")
     public UserToken loginUser(@RequestBody UserLoginRequestDto request) {
 
-        return userLoginService.userLogin(request);
+        return authorizationService.userLogin(request);
     }
+
 
     @PostMapping(value = "/register")
     public void registerUser(@RequestBody RegisterUserRequestDto request) {
 
-        //userInfoService.registerUser(request);
+        authorizationService.registerUser(request);
     }
 
     @GetMapping(value = "/user", params = "activeId")

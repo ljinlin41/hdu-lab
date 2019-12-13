@@ -26,6 +26,12 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
+    /**
+     * 根据用户id获取用户信息
+     *
+     * @param id 用户id
+     * @return result
+     */
     @PreAuthorize("hasAnyRole('teacher', 'admin', 'root') or authentication.principal.getUserId == #id")
     @GetMapping(value = "/user", params = "id")
     public UserInfo getUserInfo(@RequestParam int id) {
@@ -33,6 +39,10 @@ public class UserInfoController {
         return userInfoService.getUserInfo(id);
     }
 
+    /**
+     * 更新用户信息
+     * @param request request
+     */
     @PreAuthorize("authentication.principal.getUserId == #request.id")
     @PutMapping(value = "/user")
     public void updateUserInfo(@RequestBody UpdateUserInfoRequestDto request) {
@@ -40,6 +50,10 @@ public class UserInfoController {
         userInfoService.updateUserInfo(request);
     }
 
+    /**
+     * 删除用户
+     * @param request request
+     */
     @PreAuthorize("authentication.principal.getUserId == #request.id")
     @DeleteMapping(value = "/user")
     public void deleteUser(@RequestBody DeleteUserInfoRequestDto request) {

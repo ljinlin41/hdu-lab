@@ -152,7 +152,7 @@ public class ResourceServiceImpl implements ResourceService {
     @Override
     public void addResource(String title, String content, String category, int upUserId, String url) {
         UserInfo up = userInfoService.getUserInfo(upUserId);
-        Resource resource = new Resource();
+        Resource resource = Resource.builder().build();
         resource.setTitle(title);
         resource.setContent(content);
         resource.setCategory(category);
@@ -171,7 +171,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void updateResource(int id, String title, String content) {
-        Resource resource = new Resource();
+        Resource resource = Resource.builder().build();
         resource.setId(id);
         resource.setTitle(title);
         resource.setContent(content);

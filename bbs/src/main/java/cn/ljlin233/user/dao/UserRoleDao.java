@@ -14,18 +14,16 @@ public interface UserRoleDao {
     /**
      * 增加一个用户角色
      *
-     * @param userId 用户Id
-     * @param role 角色
-     * TODO 枚举类型
+     * @param userRole 用户角色
      */
-    void addUserRole(int userId, String role);
+    void addUserRole(UserRole userRole);
 
     /**
      * 根据用户Id删除用户角色
      *
      * @param userId 用户Id
      */
-    void deleteUserRole(int userId);
+    void deleteUserRoleByUserId(int userId);
 
     /**
      * 根据用户Id获取用户角色列表
