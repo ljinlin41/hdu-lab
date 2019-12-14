@@ -85,6 +85,11 @@ public class AchievementDaoImpl implements AchievementDao {
     }
 
     @Override
+    public void updateAchievementByExample(Achievement achievement, Example example) {
+        achievementMapper.updateByExampleSelective(achievement, example);
+    }
+
+    @Override
     public void deleteAchievement(Achievement achievement) {
 
         achievementMapper.delete(achievement);

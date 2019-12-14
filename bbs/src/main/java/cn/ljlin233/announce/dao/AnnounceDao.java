@@ -2,6 +2,7 @@ package cn.ljlin233.announce.dao;
 
 import cn.ljlin233.announce.entity.Announce;
 import cn.ljlin233.util.Page;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AnnounceDao
@@ -58,6 +59,7 @@ public interface AnnounceDao {
      */
     void updateAnnounce(Announce announce);
 
+    void updateAnnounceByExample(Announce announce, Example example);
     /**
      * 删除公告
      *

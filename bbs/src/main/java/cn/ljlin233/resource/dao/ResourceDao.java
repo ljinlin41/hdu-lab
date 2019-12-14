@@ -3,6 +3,7 @@ package cn.ljlin233.resource.dao;
 import java.util.List;
 
 import cn.ljlin233.resource.entity.Resource;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * ResourceDao
@@ -106,6 +107,7 @@ public interface ResourceDao {
      */
     void updateResource(Resource resource);
 
+    void updateResourceByExample(Resource resource, Example example);
     /**
      * 删除一个资源
      *

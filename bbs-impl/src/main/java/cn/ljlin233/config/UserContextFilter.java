@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cn.ljlin233.user.dao.UserTokenDao;
-import cn.ljlin233.user.entity.UserToken;
+import cn.ljlin233.authorization.dao.UserTokenDao;
+import cn.ljlin233.authorization.entity.UserToken;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
 

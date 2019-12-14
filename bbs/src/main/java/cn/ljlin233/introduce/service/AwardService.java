@@ -64,6 +64,8 @@ public interface AwardService {
      */
     void updateAward(UpdateAwardRequestDto request);
 
+    void updateNickname(int userId, String name);
+
     /**
      * 根据奖项Id删除一个奖项
      *

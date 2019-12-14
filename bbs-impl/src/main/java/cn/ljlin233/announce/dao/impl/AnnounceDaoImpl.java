@@ -85,6 +85,11 @@ public class AnnounceDaoImpl implements AnnounceDao {
     }
 
     @Override
+    public void updateAnnounceByExample(Announce announce, Example example) {
+        announceMapper.updateByExampleSelective(announce, example);
+    }
+
+    @Override
     public void deleteAnnounce(Announce announce) {
         announceMapper.delete(announce);
     }

@@ -1,11 +1,18 @@
 package cn.ljlin233.user.dao.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 
 import cn.ljlin233.user.dao.UserOriginDao;
 import cn.ljlin233.user.dao.mapper.UserOriginMapper;
 import cn.ljlin233.user.entity.UserOrigin;
+import cn.ljlin233.util.Page;
 
 /**
  * @author lvjinlin42@foxmail.com
@@ -18,18 +25,27 @@ public class UserOriginDaoImpl implements UserOriginDao {
     private UserOriginMapper userOriginMapper;
 
     @Override
-    public void addUserOrigin(String account) {
+    public Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize) {
 
+        PageHelper.startPage(pageNum, pageSize);
+        List<UserOrigin> userOriginList = userOriginMapper.selectAll();
+        PageInfo<UserOrigin> userOriginPageInfo = new PageInfo<>(userOriginList);
+
+        return Page.<UserOrigin>builder().totalNum(userOriginPageInfo.getTotal())
+            .pageNum(pageNum)
+            .pageSize(pageSize)
+            .data(new ArrayList<>(userOriginList))
+            .build();
     }
 
     @Override
-    public void deleteUserOrigin(String account) {
-
+    public void addUserOrigin(UserOrigin userOrigin) {
+        userOriginMapper.insertSelective(userOrigin);
     }
 
     @Override
-    public Integer getUserOriginId(String account) {
-        return null;
+    public void deleteUserOrigin(UserOrigin userOrigin) {
+        userOriginMapper.delete(userOrigin);
     }
 
     @Override

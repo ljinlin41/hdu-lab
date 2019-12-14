@@ -2,6 +2,7 @@ package cn.ljlin233.introduce.dao;
 
 import cn.ljlin233.introduce.entity.Award;
 import cn.ljlin233.util.Page;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AwardDao
@@ -58,6 +59,7 @@ public interface AwardDao {
      */
     void updateAward(Award award);
 
+    void updateAwardByExample(Award award, Example example);
     /**
      * 删除一个奖项
      *

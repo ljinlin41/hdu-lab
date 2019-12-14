@@ -112,6 +112,8 @@ public interface ResourceService {
      */
     void updateResource(int id, String title, String content);
 
+    void updateNickname(int userId, String nickname);
+
     /**
      * 删除一个资源
      *

@@ -76,6 +76,11 @@ public class JobDaoImpl implements JobDao {
     }
 
     @Override
+    public void updateJobByExample(Job job, Example example) {
+        jobMapper.updateByExampleSelective(job, example);
+    }
+
+    @Override
     public void deleteJob(Job job) {
         jobMapper.delete(job);
     }

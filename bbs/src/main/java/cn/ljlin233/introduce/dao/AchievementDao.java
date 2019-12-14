@@ -2,6 +2,7 @@ package cn.ljlin233.introduce.dao;
 
 import cn.ljlin233.introduce.entity.Achievement;
 import cn.ljlin233.util.Page;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AchievementDao
@@ -58,6 +59,7 @@ public interface AchievementDao {
      */
     void updateAchievement(Achievement achievement);
 
+    void updateAchievementByExample(Achievement achievement, Example example);
     /**
      * 删除一个成果
      *

@@ -9,9 +9,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import cn.ljlin233.user.common.MyAccessDeniedHandler;
-import cn.ljlin233.user.common.MyAuthenticationEntryPoint;
-import cn.ljlin233.user.common.TokenFilter;
+import cn.ljlin233.authorization.common.MyAccessDeniedHandler;
+import cn.ljlin233.authorization.common.MyAuthenticationEntryPoint;
+import cn.ljlin233.authorization.common.TokenFilter;
 
 /**
  * @author lvjinlin42@foxmail.com

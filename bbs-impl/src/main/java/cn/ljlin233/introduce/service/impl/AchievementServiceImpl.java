@@ -14,6 +14,7 @@ import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.SystemException;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AchievementServiceImpl
@@ -104,6 +105,17 @@ public class AchievementServiceImpl implements AchievementService {
         } catch (Exception e) {
             throw new SystemException("更新研究成果失败!", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateNickname(int userId, String nickname) {
+
+        Achievement achievement = Achievement.builder().upNickname(nickname).build();
+        Example example = new Example(Achievement.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("up_userid", userId);
+
+        achievementDao.updateAchievementByExample(achievement, example);
     }
 
     @Override

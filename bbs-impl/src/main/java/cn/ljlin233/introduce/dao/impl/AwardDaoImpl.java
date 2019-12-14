@@ -76,6 +76,11 @@ public class AwardDaoImpl implements AwardDao {
     }
 
     @Override
+    public void updateAwardByExample(Award award, Example example) {
+        awardMapper.updateByExampleSelective(award, example);
+    }
+
+    @Override
     public void deleteAward(Award award) {
         awardMapper.delete(award);
     }

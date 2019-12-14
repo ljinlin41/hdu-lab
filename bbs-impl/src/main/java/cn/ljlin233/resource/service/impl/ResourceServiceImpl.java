@@ -13,6 +13,7 @@ import cn.ljlin233.resource.service.ResourceService;
 import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
 import cn.ljlin233.util.exception.entity.SystemException;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * ResourceServiceImpl
@@ -151,7 +152,7 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     public void addResource(String title, String content, String category, int upUserId, String url) {
-        UserInfo up = userInfoService.getUserInfo(upUserId);
+        UserInfo up = userInfoService.getUserInfoByUserId(upUserId);
         Resource resource = Resource.builder().build();
         resource.setTitle(title);
         resource.setContent(content);
@@ -181,6 +182,17 @@ public class ResourceServiceImpl implements ResourceService {
         } catch (Exception e) {
             throw new SystemException("failed to update resource", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateNickname(int userId, String nickname) {
+
+        Resource resource = Resource.builder().upNickname(nickname).build();
+        Example example = new Example(Resource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("up_userid", userId);
+
+        resourceDao.updateResourceByExample(resource, example);
     }
 
     @Override

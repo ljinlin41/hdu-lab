@@ -61,6 +61,8 @@ public interface AchievementService {
      */
     void updateAchievement(UpdateAchievementRequestDto request);
 
+    void updateNickname(int userId, String nickname);
+
     /**
      * 删除成果
      *

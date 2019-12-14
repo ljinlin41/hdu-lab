@@ -28,7 +28,9 @@ public interface UserInfoDao {
      *
      * @param userInfo 用户信息
      */
-    void updateUserInfo(UserInfo userInfo);
+    void updateUserInfoByPrimaryKey(UserInfo userInfo);
+
+    UserInfo getOneUserInfo(UserInfo userInfo);
 
     /**
      * 根据用户Id获取用户信息
@@ -94,11 +96,4 @@ public interface UserInfoDao {
      */
     boolean isActive(String account);
 
-    /**
-     * 更新其他表中冗余的nickname
-     *
-     * @param userId 用户id
-     * @param name name
-     */
-    void updateUsername(int userId, String name);
 }

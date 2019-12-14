@@ -14,6 +14,7 @@ import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.SystemException;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * JobServiceImpl
@@ -109,6 +110,17 @@ public class JobServiceImpl implements JobService {
         } catch (Exception e) {
             throw new SystemException("更新招聘信息失败!", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateNickname(int userId, String nickname) {
+
+        Job job = Job.builder().upNickname(nickname).build();
+        Example example = new Example(Job.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("up_userid", userId);
+
+        jobDao.updateJobByExample(job, example);
     }
 
     @Override

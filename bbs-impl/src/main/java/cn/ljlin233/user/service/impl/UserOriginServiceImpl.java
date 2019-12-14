@@ -4,37 +4,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.ljlin233.user.dao.UserOriginDao;
+import cn.ljlin233.user.dto.DeleteUserOriginRequestDto;
+import cn.ljlin233.user.dto.InsertUserOriginRequestDto;
+import cn.ljlin233.user.entity.UserOrigin;
 import cn.ljlin233.user.service.UserOriginService;
+import cn.ljlin233.util.Page;
+import cn.ljlin233.util.exception.entity.DataCheckedException;
 
 /**
  * UserOriginServiceImpl
+ * @author lvjinlin42@foxmail.com
  */
 @Service
 public class UserOriginServiceImpl implements UserOriginService {
 
+    @Autowired
     private UserOriginDao userOriginDao;
 
-    public UserOriginServiceImpl() {}
-
-    @Autowired
-    public UserOriginServiceImpl(UserOriginDao userOriginDao) {
-        this.userOriginDao = userOriginDao;
-    }
 
     @Override
-    public void addUserOrigin(String account) {
-        userOriginDao.addUserOrigin(account);
+    public void addUserOrigin(InsertUserOriginRequestDto request) {
+
+        checkUserOrigin(request.getAccount());
+
+        UserOrigin userOrigin = UserOrigin.builder().account(request.getAccount()).build();
+
+        userOriginDao.addUserOrigin(userOrigin);
     }
+
 
     @Override
-    public boolean checkUserOrigin(String account) {
-        boolean count = userOriginDao.existsAccount(account);
-        return count;
+    public void deleteUserOrigin(DeleteUserOriginRequestDto request) {
+
+        UserOrigin userOrigin = UserOrigin.builder().account(request.getAccount()).build();
+
+        userOriginDao.deleteUserOrigin(userOrigin);
     }
+
 
     @Override
-    public void deleteUserOrigin(String account) {
-        userOriginDao.deleteUserOrigin(account);
+    public Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize) {
+
+        return userOriginDao.getUserOriginByPage(pageNum, pageSize);
     }
 
+    private void checkUserOrigin(String account) {
+
+        boolean accountExist = userOriginDao.existsAccount(account);
+        if (accountExist) {
+            throw new DataCheckedException("原始账号已存在: " + account);
+        }
+    }
 }

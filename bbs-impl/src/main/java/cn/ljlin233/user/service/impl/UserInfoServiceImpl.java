@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import cn.ljlin233.user.dao.UserAuthsDao;
+import cn.ljlin233.authorization.service.UserAuthService;
+import cn.ljlin233.authorization.service.UserRoleService;
 import cn.ljlin233.user.dao.UserInfoDao;
-import cn.ljlin233.user.dao.UserRoleDao;
 import cn.ljlin233.user.dto.UpdateUserInfoRequestDto;
 import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
+import cn.ljlin233.user.service.UserNicknameService;
 import cn.ljlin233.util.exception.entity.DataCheckedException;
 import cn.ljlin233.util.exception.entity.SystemException;
 
@@ -25,20 +26,28 @@ public class UserInfoServiceImpl implements UserInfoService {
     private UserInfoDao userInfoDao;
 
     @Autowired
-    private UserAuthsDao userAuthsDao;
+    private UserAuthService userAuthService;
 
     @Autowired
-    private UserRoleDao userRoleDao;
+    private UserRoleService userRoleService;
+
+    @Autowired
+    private UserNicknameService userNicknameService;
 
     @Override
-    public UserInfo getUserInfo(int id) {
+    public UserInfo getUserInfoByUserId(int id) {
 
-        return userInfoDao.getUserInfoById(id);
+        UserInfo userInfo = UserInfo.builder().id(id).build();
+
+        return userInfoDao.getOneUserInfo(userInfo);
     }
 
     @Override
     public UserInfo getUserInfoByAccount(String account) {
-        return userInfoDao.getUserInfoByAccount(account);
+
+        UserInfo userInfo = UserInfo.builder().account(account).build();
+
+        return userInfoDao.getOneUserInfo(userInfo);
     }
 
     @Override
@@ -46,8 +55,9 @@ public class UserInfoServiceImpl implements UserInfoService {
 
         checkUpdate(request);
 
+        // 更新nickname
         if (request.getName() != null) {
-            updateNickname(request.getId(), request.getName());
+            userNicknameService.updateNickname(request.getId(), request.getName());
         }
 
         UserInfo userInfo = UserInfo.builder().id(request.getId()).nickname(request.getName()).introduction(
@@ -55,7 +65,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             request.getPhone()).build();
 
         try {
-            userInfoDao.updateUserInfo(userInfo);
+            userInfoDao.updateUserInfoByPrimaryKey(userInfo);
         } catch (Exception e) {
             throw new SystemException("更新用户信息失败", e.getMessage());
         }
@@ -65,12 +75,22 @@ public class UserInfoServiceImpl implements UserInfoService {
     public void deleteUser(int id) {
         try {
             userInfoDao.deleteUserInfo(id);
-            userAuthsDao.deleteAuthsByUserId(id);
-            userRoleDao.deleteUserRoleByUserId(id);
+            userAuthService.deleteUserAuthByUserId(id);
+            userRoleService.deleteUserRoleByUserId(id);
 
         } catch (Exception e) {
             throw new SystemException("删除用户失败", e.getMessage());
         }
+    }
+
+    /**
+     * 此方法只更新了用户信息表的nickname
+     */
+    @Override
+    public void updateNickname(int userId, String nickname) {
+        UserInfo userInfo = UserInfo.builder().id(userId).nickname(nickname).build();
+
+        userInfoDao.updateUserInfoByPrimaryKey(userInfo);
     }
 
     private void checkUpdate(UpdateUserInfoRequestDto request) {
@@ -79,7 +99,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (request.getEmail() != null) {
 
             boolean emailExist = userInfoDao.existsEmail(request.getEmail());
-
             if (emailExist) {
                 throw new DataCheckedException("邮箱已注册");
             }
@@ -89,21 +108,10 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (request.getPhone() != null) {
 
             boolean phoneExist = userInfoDao.existsPhone(request.getPhone());
-
             if (phoneExist) {
                 throw new DataCheckedException("手机已注册");
             }
         }
     }
 
-    private void updateNickname(int userId, String name) {
-
-        try {
-
-            userInfoDao.updateUsername(userId, name);
-        } catch (Exception e) {
-            throw new SystemException("更新用户名失败", e.getMessage());
-        }
-
-    }
 }

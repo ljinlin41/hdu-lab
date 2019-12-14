@@ -36,7 +36,7 @@ public class UserInfoController {
     @GetMapping(value = "/user", params = "id")
     public UserInfo getUserInfo(@RequestParam int id) {
 
-        return userInfoService.getUserInfo(id);
+        return userInfoService.getUserInfoByUserId(id);
     }
 
     /**

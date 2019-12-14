@@ -1,5 +1,8 @@
 package cn.ljlin233.user.dao;
 
+import cn.ljlin233.user.entity.UserOrigin;
+import cn.ljlin233.util.Page;
+
 /**
  * UserOriginDao
  *
@@ -7,27 +10,22 @@ package cn.ljlin233.user.dao;
  */
 public interface UserOriginDao {
 
+    Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize);
+
     /**
      * 增加原始账号
      *
-     * @param account 账号
+     * @param userOrigin 原始账号
      */
-    void addUserOrigin(String account);
+    void addUserOrigin(UserOrigin userOrigin);
 
     /**
      * 删除原始账号
      *
-     * @param account 账号
+     * @param userOrigin 原始账号
      */
-    void deleteUserOrigin(String account);
+    void deleteUserOrigin(UserOrigin userOrigin);
 
-    /**
-     * 根据账号获取账号Id
-     *
-     * @param account 账号
-     * @return 账号id
-     */
-    Integer getUserOriginId(String account);
 
     /**
      * 判断账号是否存在

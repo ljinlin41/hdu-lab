@@ -1,5 +1,10 @@
 package cn.ljlin233.user.service;
 
+import cn.ljlin233.user.dto.DeleteUserOriginRequestDto;
+import cn.ljlin233.user.dto.InsertUserOriginRequestDto;
+import cn.ljlin233.user.entity.UserOrigin;
+import cn.ljlin233.util.Page;
+
 /**
  * UserOriginService
  *
@@ -10,23 +15,18 @@ public interface UserOriginService {
     /**
      * 添加原始账号
      *
-     * @param account 账号
+     * @param request 账号
      */
-    void addUserOrigin(String account);
+    void addUserOrigin(InsertUserOriginRequestDto request);
 
-    /**
-     * 检查原始账号是否存在
-     *
-     * @param account 账号
-     * @return true or false
-     */
-    boolean checkUserOrigin(String account);
 
     /**
      * 删除原始账号
      *
-     * @param account 账号
+     * @param request 账号
      */
-    void deleteUserOrigin(String account);
+    void deleteUserOrigin(DeleteUserOriginRequestDto request);
+
+    Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize);
 
 }

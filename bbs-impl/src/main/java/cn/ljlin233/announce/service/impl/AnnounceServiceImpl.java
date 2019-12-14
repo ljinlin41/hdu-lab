@@ -16,6 +16,7 @@ import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.QueryException;
 import cn.ljlin233.util.exception.entity.SystemException;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AnnounceServiceImpl
@@ -113,6 +114,17 @@ public class AnnounceServiceImpl implements AnnounceService {
         } catch (Exception e) {
             throw new SystemException("failed to update announce", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateNickname(int userId, String nickname) {
+
+        Announce announce = Announce.builder().upUserNickname(nickname).build();
+        Example example = new Example(Announce.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("up_userid", userId);
+
+        announceDao.updateAnnounceByExample(announce, example);
     }
 
     @Override

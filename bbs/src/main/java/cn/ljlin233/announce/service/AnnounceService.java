@@ -60,6 +60,7 @@ public interface AnnounceService {
      */
     void updateAnnounce(UpdateAnnounceRequestDto request);
 
+    void updateNickname(int userId, String nickname);
     /**
      * 删除一个通知
      *

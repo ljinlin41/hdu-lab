@@ -2,10 +2,13 @@ package cn.ljlin233.resource.dao.impl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import cn.ljlin233.resource.dao.ResourceDao;
+import cn.ljlin233.resource.dao.mapper.ResourceMapper;
 import cn.ljlin233.resource.entity.Resource;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * @author lvjinlin42@foxmail.com
@@ -13,6 +16,10 @@ import cn.ljlin233.resource.entity.Resource;
  */
 @Repository
 public class ResourceDaoImpl implements ResourceDao {
+
+    @Autowired
+    private ResourceMapper resourceMapper;
+
     @Override
     public List<Resource> getAllResources() {
         return null;
@@ -71,6 +78,11 @@ public class ResourceDaoImpl implements ResourceDao {
     @Override
     public void updateResource(Resource resource) {
 
+    }
+
+    @Override
+    public void updateResourceByExample(Resource resource, Example example) {
+        resourceMapper.updateByExampleSelective(resource, example);
     }
 
     @Override

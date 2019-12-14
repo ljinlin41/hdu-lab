@@ -2,6 +2,7 @@ package cn.ljlin233.introduce.dao;
 
 import cn.ljlin233.introduce.entity.Job;
 import cn.ljlin233.util.Page;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * JobDao
@@ -61,6 +62,7 @@ public interface JobDao {
      */
     void updateJob(Job job);
 
+    void updateJobByExample(Job job, Example example);
     /**
      * 删除一个招聘
      *

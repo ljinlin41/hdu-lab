@@ -63,6 +63,7 @@ public interface JobService {
      */
     void updateJob(UpdateJobRequestDto request);
 
+    void updateNickname(int userId, String nickname);
     /**
      * 删除一个招聘
      *

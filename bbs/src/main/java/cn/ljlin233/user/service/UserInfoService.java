@@ -16,7 +16,7 @@ public interface UserInfoService {
      * @param id 用户Id
      * @return 用户信息
      */
-    UserInfo getUserInfo(int id);
+    UserInfo getUserInfoByUserId(int id);
 
     /**
      * 根据账号获取用户信息
@@ -40,4 +40,5 @@ public interface UserInfoService {
      */
     void deleteUser(int id);
 
+    void updateNickname(int userId, String nickname);
 }

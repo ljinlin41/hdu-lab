@@ -14,6 +14,7 @@ import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
 import cn.ljlin233.util.exception.entity.SystemException;
+import tk.mybatis.mapper.entity.Example;
 
 /**
  * AwardServiceImpl
@@ -103,6 +104,17 @@ public class AwardServiceImpl implements AwardService {
         } catch (Exception e) {
             throw new SystemException("更新奖项失败!", e.getMessage());
         }
+    }
+
+    @Override
+    public void updateNickname(int userId, String name) {
+
+        Award award = Award.builder().nickname(name).build();
+        Example example = new Example(Award.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("up_userid", userId);
+
+        awardDao.updateAwardByExample(award, example);
     }
 
     @Override
