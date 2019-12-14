@@ -8,7 +8,6 @@ import cn.ljlin233.authorization.dao.UserActiveDao;
 import cn.ljlin233.authorization.service.UserActiveService;
 import cn.ljlin233.user.dao.UserInfoDao;
 import cn.ljlin233.user.entity.UserInfo;
-import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * UserActiveServiceImpl
@@ -27,17 +26,12 @@ public class UserActiveServiceImpl implements UserActiveService {
     @Override
     public void activeUser(String activeId) {
 
-        try {
-            int id = userActiveDao.getUserIdByActive(activeId);
+        int id = userActiveDao.getUserIdByActive(activeId);
 
-            UserInfo userInfo = UserInfo.builder().build();
-            userInfo.setId(id);
-            userInfo.setActive(1);
+        UserInfo userInfo = UserInfo.builder().id(id).active(1).build();
 
-            userInfoDao.updateUserInfoByPrimaryKey(userInfo);
-        } catch (Exception e) {
-            throw new SystemException("账号激活失败", e.getMessage());
-        }
+        userInfoDao.updateUserInfoByPrimaryKey(userInfo);
+
     }
 
     @Override

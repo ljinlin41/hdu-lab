@@ -50,11 +50,7 @@ public class ApplyServiceImpl implements ApplyService {
         Apply apply = Apply.builder().userId(request.getUserId()).departmentId(request.getDepartmentId()).username(
             request.getUsername()).applyType(request.getApplyType()).applyStatus("待审核").build();
 
-        try {
-            applyDao.addApplys(apply);
-        } catch (Exception e) {
-            throw new SystemException("提交入部申请失败", e.getMessage());
-        }
+        applyDao.addApplys(apply);
 
         Member member = Member.builder().departmentId(request.getDepartmentId()).memberType("teacher").build();
         Page<Member> teacherPage = memberDao.getMemberList(member);
@@ -64,24 +60,14 @@ public class ApplyServiceImpl implements ApplyService {
 
     @Override
     public Apply getApplyById(int id) {
-        Apply apply;
-        try {
-            apply = applyDao.getApplyById(id);
-        } catch (Exception e) {
-            throw new SystemException("获取入部申请失败", e.getMessage());
-        }
-        return apply;
+
+        return applyDao.getApplyById(id);
     }
 
     @Override
     public Page<Apply> getApplyByUserId(int userId) {
-        Page<Apply> applys;
-        try {
-            applys = applyDao.getApplyByUserId(userId);
-        } catch (Exception e) {
-            throw new SystemException("获取入部申请失败", e.getMessage());
-        }
-        return applys;
+
+        return applyDao.getApplyByUserId(userId);
     }
 
 

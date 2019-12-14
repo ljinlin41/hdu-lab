@@ -14,8 +14,6 @@ import cn.ljlin233.util.Page;
 import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
-import cn.ljlin233.util.exception.entity.QueryException;
-import cn.ljlin233.util.exception.entity.SystemException;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -33,55 +31,28 @@ public class AnnounceServiceImpl implements AnnounceService {
 
     @Override
     public Page<Announce> getAllAnnounces() {
-        Page<Announce> results;
 
-        try {
-            results = announceDao.getAllAnnounces();
-        } catch (Exception e) {
-            throw new QueryException("Get all announces fail", e.getMessage());
-        }
-
-        return results;
+        return announceDao.getAllAnnounces();
     }
 
     @Override
     public Page<Announce> getAnnouncesByPage(int pageNum, int pageSize) {
-        Page<Announce> results;
 
-        try {
-            results = announceDao.getAnnouncesByPage(pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("fail to get announces by page", e.getMessage());
-        }
-        return results;
+        return announceDao.getAnnouncesByPage(pageNum, pageSize);
     }
 
     @Override
     public Announce getAnnounceById(int id) {
-        Announce announce;
-
-        try {
-            announce = announceDao.getAnnounceById(id);
-            // 增加一个浏览记录
-            addVisitCount(announce);
-        } catch (Exception e) {
-            throw new QueryException("failed to get announce by Id", e.getMessage());
-        }
-
+        Announce announce = announceDao.getAnnounceById(id);
+        // 增加一个浏览记录
+        addVisitCount(announce);
         return announce;
     }
 
     @Override
     public Page<Announce> searchAnnounces(String title, int pageNum, int pageSize) {
 
-        Page<Announce> results;
-        try {
-            results = announceDao.searchAnnounce(title, pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("failed to search announces", e.getMessage());
-        }
-
-        return results;
+        return announceDao.searchAnnounce(title, pageNum, pageSize);
     }
 
     @Override
@@ -96,11 +67,8 @@ public class AnnounceServiceImpl implements AnnounceService {
             .build();
         BeanUtils.copyProperties(request, announce);
 
-        try {
-            announceDao.addAnnounce(announce);
-        } catch (Exception e) {
-            throw new SystemException("failed to add Announce to server", e.getMessage());
-        }
+        announceDao.addAnnounce(announce);
+
     }
 
     @Override
@@ -108,12 +76,8 @@ public class AnnounceServiceImpl implements AnnounceService {
         Announce announce = Announce.builder().id(request.getAnnounceId()).title(request.getTitle()).content(
             request.getContent()).savePath(request.getSavePath()).build();
 
+        announceDao.updateAnnounce(announce);
 
-        try {
-            announceDao.updateAnnounce(announce);
-        } catch (Exception e) {
-            throw new SystemException("failed to update announce", e.getMessage());
-        }
     }
 
     @Override
@@ -130,12 +94,10 @@ public class AnnounceServiceImpl implements AnnounceService {
     @Override
     public void deleteAnnounce(int id) {
 
-        try {
-            Announce announce = getAnnounceById(id);
-            announceDao.deleteAnnounce(announce);
-        } catch (Exception e) {
-            throw new SystemException("failed to delete announce", e.getMessage());
-        }
+        Announce announce = getAnnounceById(id);
+
+        announceDao.deleteAnnounce(announce);
+
     }
 
     private void addVisitCount(Announce announce) {

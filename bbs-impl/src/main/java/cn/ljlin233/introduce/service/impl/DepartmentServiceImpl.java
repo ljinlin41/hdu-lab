@@ -10,7 +10,6 @@ import cn.ljlin233.introduce.dto.UpdateDepartmentRequestDto;
 import cn.ljlin233.introduce.entity.Department;
 import cn.ljlin233.introduce.service.DepartmentService;
 import cn.ljlin233.util.Page;
-import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * DepartmentServiceImpl
@@ -31,61 +30,33 @@ public class DepartmentServiceImpl implements DepartmentService {
             .description(request.getDescription())
             .build();
 
-        try {
-            departmentDao.addDepartment(department);
-        } catch (Exception e) {
-            throw new SystemException("添加部门失败", e.getMessage());
-        }
+        departmentDao.addDepartment(department);
 
     }
 
     @Override
     public Page<Department> getAllDepartments() {
 
-        Page<Department> all;
-        try {
-            all = departmentDao.getAllDepartments();
-        } catch (Exception e) {
-            throw new SystemException("获取所有部门失败", e.getMessage());
-        }
-        return all;
+        return departmentDao.getAllDepartments();
     }
 
     @Override
     public Page<Department> getDepartmentsPage(int pageNum, int pageSize) {
 
-        Page<Department> all;
-        try {
-            all = departmentDao.getDepartmentsPage(pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("按页获取部门失败", e.getMessage());
-        }
-        return all;
+        return departmentDao.getDepartmentsPage(pageNum, pageSize);
     }
 
     @Override
     public Department getDepartmentById(int id) {
-        Department department;
-        try {
-            department = departmentDao.getDepartmentById(id);
-        } catch (Exception e) {
-            throw new SystemException("获取部门详情失败", e.getMessage());
-        }
 
-        return department;
+        return departmentDao.getDepartmentById(id);
     }
 
 
     @Override
     public Page<Department> searchDepartments(String keywords, int pageNum, int pageSize) {
 
-        Page<Department> all;
-        try {
-            all = departmentDao.searchDepartments(keywords, pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("按页搜索部门失败", e.getMessage());
-        }
-        return all;
+        return departmentDao.searchDepartments(keywords, pageNum, pageSize);
     }
 
 
@@ -95,20 +66,15 @@ public class DepartmentServiceImpl implements DepartmentService {
         Department department = Department.builder().id(request.getId()).name(request.getName()).description(
             request.getDescription()).build();
 
-        try {
-            departmentDao.updateDepartment(department);
-        } catch (Exception e) {
-            throw new SystemException("更新部门信息失败", e.getMessage());
-        }
+        departmentDao.updateDepartment(department);
+
     }
 
     @Override
     public void deleteDepartment(int id) {
-        try {
-            departmentDao.deleteDepartment(id);
-        } catch (Exception e) {
-            throw new SystemException("删除部门失败", e.getMessage());
-        }
+
+        departmentDao.deleteDepartment(id);
+
     }
 
 }

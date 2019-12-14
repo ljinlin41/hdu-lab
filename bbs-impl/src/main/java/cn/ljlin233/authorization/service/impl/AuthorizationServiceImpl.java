@@ -112,26 +112,22 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         String activeId = UUID.randomUUID().toString().replace("-", "");
 
         // 数据库存储
-        try {
 
-            userInfo = UserInfo.builder().account(request.getAccount()).email(request.getEmail()).registerTime(
-                DateUtil.getNow()).build();
+        userInfo = UserInfo.builder().account(request.getAccount()).email(request.getEmail()).registerTime(
+            DateUtil.getNow()).build();
 
-            userInfoService.addUserInfo(userInfo);
+        userInfoService.addUserInfo(userInfo);
 
-            userInfo = userInfoService.getUserInfoByAccount(request.getAccount());
-            int userId = userInfo.getId();
+        userInfo = userInfoService.getUserInfoByAccount(request.getAccount());
+        int userId = userInfo.getId();
 
-            userActiveService.storeActive(activeId, userId);
+        userActiveService.storeActive(activeId, userId);
 
-            userAuthService.addUserAuth(userId, "account", request.getAccount(), md5Password);
-            userAuthService.addUserAuth(userId, "email", request.getEmail(), md5Password);
+        userAuthService.addUserAuth(userId, "account", request.getAccount(), md5Password);
+        userAuthService.addUserAuth(userId, "email", request.getEmail(), md5Password);
 
-            userRoleService.addUserRole(userId, request.getRole());
+        userRoleService.addUserRole(userId, request.getRole());
 
-        } catch (Exception e) {
-            throw new SystemException("数据库添加用户失败", e.getMessage());
-        }
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("1329540850@qq.com");

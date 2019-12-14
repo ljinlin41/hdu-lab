@@ -13,7 +13,6 @@ import cn.ljlin233.util.Page;
 import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
-import cn.ljlin233.util.exception.entity.SystemException;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -43,48 +42,24 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public Page<Achievement> getAllAchievements() {
-        Page<Achievement> all;
-        try {
-            all = achievementDao.getAllAchievements();
-        } catch (Exception e) {
-            throw new SystemException("服务器获取所有研究成果失败!", e.getMessage());
-        }
-        return all;
+        return achievementDao.getAllAchievements();
     }
 
     @Override
     public Page<Achievement> getAchievementsPage(int pageNum, int pageSize) {
-        Page<Achievement> result;
-        try {
-            result = achievementDao.getAchievementsPage(pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("服务器获取研究成果失败!", e.getMessage());
-        }
 
-        return result;
+        return achievementDao.getAchievementsPage(pageNum, pageSize);
     }
 
     @Override
     public Page<Achievement> searchAchievements(String keywords, int pageNum, int pageSize) {
 
-        Page<Achievement> result;
-        try {
-            result = achievementDao.searchAchievements(keywords, pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("服务器搜索研究成果失败!", e.getMessage());
-        }
-
-        return result;
+        return achievementDao.searchAchievements(keywords, pageNum, pageSize);
     }
 
     @Override
     public Achievement getAchievementById(int id) {
-        Achievement result;
-        try {
-            result = achievementDao.getAchievementById(id);
-        } catch (Exception e) {
-            throw new SystemException("服务器获取研究成果失败!", e.getMessage());
-        }
+        Achievement result = achievementDao.getAchievementById(id);
         // 访问次数+1
         addVisitCount(result);
 
@@ -94,17 +69,15 @@ public class AchievementServiceImpl implements AchievementService {
 
     @Override
     public void updateAchievement(UpdateAchievementRequestDto request) {
-        try {
-            Achievement achievement = Achievement.builder()
-                .id(request.getAchievementId())
-                .title(request.getTitle())
-                .content(
-                request.getContent()).build();
 
-            achievementDao.updateAchievement(achievement);
-        } catch (Exception e) {
-            throw new SystemException("更新研究成果失败!", e.getMessage());
-        }
+        Achievement achievement = Achievement.builder()
+            .id(request.getAchievementId())
+            .title(request.getTitle())
+            .content(request.getContent())
+            .build();
+
+        achievementDao.updateAchievement(achievement);
+
     }
 
     @Override
@@ -121,24 +94,18 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public void deleteAchievement(int id) {
 
-        try {
+        Achievement achievement = achievementDao.getAchievementById(id);
+        achievementDao.deleteAchievement(achievement);
 
-            Achievement achievement = achievementDao.getAchievementById(id);
-            achievementDao.deleteAchievement(achievement);
-        } catch (Exception e) {
-            throw new SystemException("删除研究成果失败!", e.getMessage());
-        }
     }
 
     private void addVisitCount(Achievement achievement) {
-        try {
-            Achievement newAchievement = Achievement.builder().id(achievement.getId()).visitCount(
-                achievement.getVisitCount() + 1).build();
 
-            achievementDao.updateAchievement(newAchievement);
-        } catch (Exception e) {
-            throw new SystemException("研究成果访问数错误!", e.getMessage());
-        }
+        Achievement newAchievement = Achievement.builder().id(achievement.getId()).visitCount(
+            achievement.getVisitCount() + 1).build();
+
+        achievementDao.updateAchievement(newAchievement);
+
     }
 
 }

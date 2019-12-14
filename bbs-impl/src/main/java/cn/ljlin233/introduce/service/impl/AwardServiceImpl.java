@@ -13,7 +13,6 @@ import cn.ljlin233.util.Page;
 import cn.ljlin233.util.common.DateUtil;
 import cn.ljlin233.util.common.UserContext;
 import cn.ljlin233.util.common.UserContextUtil;
-import cn.ljlin233.util.exception.entity.SystemException;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -30,34 +29,20 @@ public class AwardServiceImpl implements AwardService {
 
     @Override
     public Page<Award> getAllAwards() {
-        Page<Award> all;
-        try {
-            all = awardDao.getAllAwards();
-        } catch (Exception e) {
-            throw new SystemException("服务器获取所有奖项失败!", e.getMessage());
-        }
-        return all;
+
+        return awardDao.getAllAwards();
     }
 
     @Override
     public Page<Award> getAwardsPage(int pageNum, int pageSize) {
-        Page<Award> result;
-        try {
-            result = awardDao.getAwardsPage(pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("服务器获取奖项失败!", e.getMessage());
-        }
-        return result;
+
+        return awardDao.getAwardsPage(pageNum, pageSize);
     }
 
     @Override
     public Award getAwardById(int id) {
-        Award result;
-        try {
-            result = awardDao.getAwardById(id);
-        } catch (Exception e) {
-            throw new SystemException("服务器获取奖项失败!", e.getMessage());
-        }
+
+        Award result = awardDao.getAwardById(id);
         // 访问次数+1
         addVisitCount(result);
 
@@ -68,13 +53,7 @@ public class AwardServiceImpl implements AwardService {
     @Override
     public Page<Award> searchAwards(String keywords, int pageNum, int pageSize) {
 
-        Page<Award> result;
-        try {
-            result = awardDao.searchAwards(keywords, pageNum, pageSize);
-        } catch (Exception e) {
-            throw new SystemException("服务器搜索奖项失败!", e.getMessage());
-        }
-        return result;
+        return awardDao.searchAwards(keywords, pageNum, pageSize);
     }
 
 
@@ -86,24 +65,21 @@ public class AwardServiceImpl implements AwardService {
         Award award = Award.builder().title(request.getTitle()).content(request.getContent()).upUserId(
             userContext.getId()).nickname(userContext.getNickName()).datetime(DateUtil.getNow()).build();
 
-        try {
-            awardDao.addAward(award);
-        } catch (Exception e) {
-            throw new SystemException("服务器存储奖项失败", e.getMessage());
-        }
+        awardDao.addAward(award);
+
     }
 
     @Override
     public void updateAward(UpdateAwardRequestDto request) {
-        try {
 
-            Award award = Award.builder().id(request.getAwardId()).title(request.getTitle()).content(
-                request.getContent()).build();
+        Award award = Award.builder()
+            .id(request.getAwardId())
+            .title(request.getTitle())
+            .content(request.getContent())
+            .build();
 
-            awardDao.updateAward(award);
-        } catch (Exception e) {
-            throw new SystemException("更新奖项失败!", e.getMessage());
-        }
+        awardDao.updateAward(award);
+
     }
 
     @Override
@@ -122,22 +98,16 @@ public class AwardServiceImpl implements AwardService {
 
         Award award = awardDao.getAwardById(id);
 
-        try {
-            awardDao.deleteAward(award);
-        } catch (Exception e) {
-            throw new SystemException("删除奖项失败!", e.getMessage());
-        }
+        awardDao.deleteAward(award);
+
     }
 
     private void addVisitCount(Award award) {
-        try {
 
-            Award newAward = Award.builder().id(award.getId()).visitCount(award.getVisitCount() + 1).build();
+        Award newAward = Award.builder().id(award.getId()).visitCount(award.getVisitCount() + 1).build();
 
-            awardDao.updateAward(newAward);
-        } catch (Exception e) {
-            throw new SystemException("奖项访问数错误!", e.getMessage());
-        }
+        awardDao.updateAward(newAward);
+
     }
 
 }

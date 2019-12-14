@@ -12,7 +12,6 @@ import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
 import cn.ljlin233.user.service.UserNicknameService;
 import cn.ljlin233.util.exception.entity.DataCheckedException;
-import cn.ljlin233.util.exception.entity.SystemException;
 
 /**
  * UserInfoServiceImpl
@@ -64,23 +63,17 @@ public class UserInfoServiceImpl implements UserInfoService {
             request.getDescription()).profilePicture(request.getPicture()).email(request.getEmail()).phone(
             request.getPhone()).build();
 
-        try {
-            userInfoDao.updateUserInfoByPrimaryKey(userInfo);
-        } catch (Exception e) {
-            throw new SystemException("更新用户信息失败", e.getMessage());
-        }
+        userInfoDao.updateUserInfoByPrimaryKey(userInfo);
+
     }
 
     @Override
     public void deleteUser(int id) {
-        try {
-            userInfoDao.deleteUserInfo(id);
-            userAuthService.deleteUserAuthByUserId(id);
-            userRoleService.deleteUserRoleByUserId(id);
 
-        } catch (Exception e) {
-            throw new SystemException("删除用户失败", e.getMessage());
-        }
+        userInfoDao.deleteUserInfo(id);
+        userAuthService.deleteUserAuthByUserId(id);
+        userRoleService.deleteUserRoleByUserId(id);
+
     }
 
     /**
