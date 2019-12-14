@@ -21,7 +21,7 @@ public class UserTokenDaoImpl implements UserTokenDao {
 
     @Override
     public void addToken(String token, UserToken userToken) {
-        redisTemplate.opsForValue().set(token, userToken, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(token, userToken, 30, TimeUnit.DAYS);
     }
 
     @Override
@@ -33,6 +33,6 @@ public class UserTokenDaoImpl implements UserTokenDao {
 
     @Override
     public void refreshToken(String token) {
-        redisTemplate.expire(token, 30, TimeUnit.MINUTES);
+        redisTemplate.expire(token, 30, TimeUnit.DAYS);
     }
 }
