@@ -47,4 +47,10 @@ public interface UserInfoService {
      * @param nickname nickname
      */
     void updateNickname(int userId, String nickname);
+
+    void addUserInfo(UserInfo userInfo);
+
+    boolean existsEmail(String email);
+
+    boolean existsPhone(String phone);
 }

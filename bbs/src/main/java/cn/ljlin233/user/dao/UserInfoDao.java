@@ -46,20 +46,4 @@ public interface UserInfoDao {
      */
     int getUserIdByActiveId(String activeId);
 
-    /**
-     * 验证邮箱是否存在
-     *
-     * @param email 邮箱
-     * @return true or false
-     */
-    boolean existsEmail(String email);
-
-    /**
-     * 验证手机号是否存在
-     *
-     * @param phone 手机号
-     * @return true or false
-     */
-    boolean existsPhone(String phone);
-
 }

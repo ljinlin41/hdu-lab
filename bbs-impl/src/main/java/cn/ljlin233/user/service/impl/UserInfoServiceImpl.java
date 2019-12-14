@@ -93,12 +93,36 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfoDao.updateUserInfoByPrimaryKey(userInfo);
     }
 
+    @Override
+    public void addUserInfo(UserInfo userInfo) {
+        userInfoDao.addUserInfo(userInfo);
+    }
+
+    @Override
+    public boolean existsEmail(String email) {
+
+        UserInfo userInfo = UserInfo.builder().email(email).build();
+
+        userInfo = userInfoDao.getOneUserInfo(userInfo);
+
+        return userInfo != null;
+    }
+
+    @Override
+    public boolean existsPhone(String phone) {
+        UserInfo userInfo = UserInfo.builder().phone(phone).build();
+
+        userInfo = userInfoDao.getOneUserInfo(userInfo);
+
+        return userInfo != null;
+    }
+
     private void checkUpdate(UpdateUserInfoRequestDto request) {
 
         // 检查邮箱
         if (request.getEmail() != null) {
 
-            boolean emailExist = userInfoDao.existsEmail(request.getEmail());
+            boolean emailExist = existsEmail(request.getEmail());
             if (emailExist) {
                 throw new DataCheckedException("邮箱已注册");
             }
@@ -107,7 +131,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         // 检查手机
         if (request.getPhone() != null) {
 
-            boolean phoneExist = userInfoDao.existsPhone(request.getPhone());
+            boolean phoneExist = existsPhone(request.getPhone());
             if (phoneExist) {
                 throw new DataCheckedException("手机已注册");
             }

@@ -14,4 +14,5 @@ public interface UserActiveService {
      */
     void activeUser(String activeId);
 
+    void storeActive(String active, int userId);
 }

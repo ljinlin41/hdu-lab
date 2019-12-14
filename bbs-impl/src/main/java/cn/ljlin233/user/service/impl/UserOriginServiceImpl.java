@@ -48,9 +48,17 @@ public class UserOriginServiceImpl implements UserOriginService {
         return userOriginDao.getUserOriginByPage(pageNum, pageSize);
     }
 
+    @Override
+    public boolean existsAccount(String account) {
+
+        UserOrigin userOrigin = UserOrigin.builder().account(account).build();
+        userOrigin = userOriginDao.getOneUserOrigin(userOrigin);
+        return userOrigin != null;
+    }
+
     private void checkUserOrigin(String account) {
 
-        boolean accountExist = userOriginDao.existsAccount(account);
+        boolean accountExist = existsAccount(account);
         if (accountExist) {
             throw new DataCheckedException("原始账号已存在: " + account);
         }

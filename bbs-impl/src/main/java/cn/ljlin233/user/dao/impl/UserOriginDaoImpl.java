@@ -49,12 +49,7 @@ public class UserOriginDaoImpl implements UserOriginDao {
     }
 
     @Override
-    public boolean existsAccount(String account) {
-
-        UserOrigin userOrigin = UserOrigin.builder().account(account).build();
-
-        int count = userOriginMapper.selectCount(userOrigin);
-
-        return count != 0;
+    public UserOrigin getOneUserOrigin(UserOrigin userOrigin) {
+        return userOriginMapper.selectOne(userOrigin);
     }
 }

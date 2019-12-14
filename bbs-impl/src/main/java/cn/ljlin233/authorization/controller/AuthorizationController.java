@@ -25,7 +25,6 @@ public class AuthorizationController {
     @Autowired
     private UserActiveService userActiveService;
 
-
     @Autowired
     private AuthorizationService authorizationService;
 

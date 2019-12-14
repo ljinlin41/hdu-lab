@@ -23,12 +23,5 @@ public interface UserAuthsDao {
      */
     void deleteUserAuth(UserAuths userAuths);
 
-    /**
-     * 根据账号获取用户授权
-     *
-     * @param identifier 账号
-     * @return 用户授权
-     */
-    UserAuths getUserAuthsByidentifier(String identifier);
-
+    UserAuths getUserAuths(UserAuths userAuths);
 }

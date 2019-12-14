@@ -45,9 +45,6 @@ public class UserInfo {
     @Column(name = "active")
     private Integer active;
 
-    @Column(name = "active_id")
-    private String activeId;
-
     @Column(name = "isban")
     private Integer isban;
 

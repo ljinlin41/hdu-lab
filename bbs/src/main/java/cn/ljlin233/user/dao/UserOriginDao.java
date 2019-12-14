@@ -33,12 +33,6 @@ public interface UserOriginDao {
      */
     void deleteUserOrigin(UserOrigin userOrigin);
 
+    UserOrigin getOneUserOrigin(UserOrigin userOrigin);
 
-    /**
-     * 判断账号是否存在
-     *
-     * @param account 账号
-     * @return true or false
-     */
-    boolean existsAccount(String account);
 }

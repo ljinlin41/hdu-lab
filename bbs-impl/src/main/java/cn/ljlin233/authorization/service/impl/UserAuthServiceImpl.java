@@ -37,4 +37,12 @@ public class UserAuthServiceImpl implements UserAuthService {
 
         userAuthsDao.deleteUserAuth(userAuths);
     }
+
+    @Override
+    public UserAuths getUserAuthsByIdentifier(String identifier) {
+
+        UserAuths userAuths = UserAuths.builder().identifier(identifier).build();
+
+        return userAuthsDao.getUserAuths(userAuths);
+    }
 }

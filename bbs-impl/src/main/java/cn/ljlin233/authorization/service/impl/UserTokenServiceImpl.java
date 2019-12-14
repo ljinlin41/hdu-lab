@@ -23,21 +23,17 @@ public class UserTokenServiceImpl implements UserTokenService {
         userTokenDao.addToken(userToken.getToken(), userToken);
     }
 
-    @Override
-    public void deleteToken(int userId) {
-        userTokenDao.deleteToken(String.valueOf(userId));
-    }
 
     @Override
-    public boolean checkRefreshToken(String token) {
+    public UserToken getUserToken(String token) {
 
-        boolean result = false;
-        boolean keyFlag = userTokenDao.hasToken(token);
-        if (keyFlag) {
-            result = true;
+        UserToken userToken = userTokenDao.getUserToken(token);
+
+        if (userToken != null) {
             userTokenDao.refreshToken(token);
         }
-        return result;
+
+        return userToken;
     }
 
 }

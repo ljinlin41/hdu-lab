@@ -25,12 +25,6 @@ public interface UserTokenDao {
      */
     UserToken getUserToken(String token);
 
-    /**
-     * 删除token
-     *
-     * @param token token
-     */
-    void deleteToken(String token);
 
     /**
      * 刷新token过期时间
@@ -38,21 +32,5 @@ public interface UserTokenDao {
      * @param token token
      */
     void refreshToken(String token);
-
-    /**
-     * 获取token开始时间
-     *
-     * @param token token
-     * @return 开始时间
-     */
-    long getTokenTime(String token);
-
-    /**
-     * 判断token是否存在
-     *
-     * @param token token
-     * @return true or false
-     */
-    boolean hasToken(String token);
 
 }

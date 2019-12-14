@@ -36,4 +36,5 @@ public interface UserOriginService {
      */
     Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize);
 
+    boolean existsAccount(String account);
 }

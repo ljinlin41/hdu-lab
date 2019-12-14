@@ -29,13 +29,9 @@ public class UserAuthsDaoImpl implements UserAuthsDao {
         userAuthsMapper.delete(userAuths);
     }
 
+
     @Override
-    public UserAuths getUserAuthsByidentifier(String identifier) {
-
-        UserAuths userAuths = UserAuths.builder().identifier(identifier).build();
-
-        userAuths = userAuthsMapper.selectOne(userAuths);
-
-        return userAuths;
+    public UserAuths getUserAuths(UserAuths userAuths) {
+        return userAuthsMapper.selectOne(userAuths);
     }
 }

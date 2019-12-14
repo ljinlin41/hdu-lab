@@ -19,13 +19,7 @@ public interface UserRoleDao {
     void addUserRole(UserRole userRole);
 
 
-    /**
-     * 根据用户Id获取用户角色列表
-     *
-     * @param userId 用户Id
-     * @return 角色列表
-     */
-    List<UserRole> getUserRoleByUserId(int userId);
-
     void deleteUserRole(UserRole userRole);
+
+    List<UserRole> getUserRole(UserRole userRole);
 }

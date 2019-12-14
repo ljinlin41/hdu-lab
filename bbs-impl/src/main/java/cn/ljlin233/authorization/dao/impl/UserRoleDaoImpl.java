@@ -1,5 +1,6 @@
 package cn.ljlin233.authorization.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +27,15 @@ public class UserRoleDaoImpl implements UserRoleDao {
 
 
     @Override
-    public List<UserRole> getUserRoleByUserId(int userId) {
-
-        UserRole userRole = UserRole.builder().userId(userId).build();
-
-        List<UserRole> userRoleList = userRoleMapper.select(userRole);
-
-        return userRoleList;
+    public void deleteUserRole(UserRole userRole) {
+        userRoleMapper.delete(userRole);
     }
 
     @Override
-    public void deleteUserRole(UserRole userRole) {
-        userRoleMapper.delete(userRole);
+    public List<UserRole> getUserRole(UserRole userRole) {
+
+        List<UserRole> userRoleList = userRoleMapper.select(userRole);
+
+        return new ArrayList<>(userRoleList);
     }
 }

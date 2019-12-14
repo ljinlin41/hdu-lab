@@ -2,6 +2,7 @@ package cn.ljlin233.authorization.entity;
 
 import java.util.List;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Data;
  * @author lvjinlin42@foxmail.com
  */
 @Data
+@Builder
 public class UserToken {
 
     /**

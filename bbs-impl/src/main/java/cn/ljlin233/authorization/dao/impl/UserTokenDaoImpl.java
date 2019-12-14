@@ -1,5 +1,7 @@
 package cn.ljlin233.authorization.dao.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,34 +21,18 @@ public class UserTokenDaoImpl implements UserTokenDao {
 
     @Override
     public void addToken(String token, UserToken userToken) {
-        redisTemplate.opsForValue().set(token, userToken);
+        redisTemplate.opsForValue().set(token, userToken, 30, TimeUnit.MINUTES);
     }
 
     @Override
     public UserToken getUserToken(String token) {
 
-        Object object = redisTemplate.opsForValue().get(token);
-
-        return (UserToken) object;
+        return (UserToken) redisTemplate.opsForValue().get(token);
     }
 
-    @Override
-    public void deleteToken(String token) {
-
-    }
 
     @Override
     public void refreshToken(String token) {
-
-    }
-
-    @Override
-    public long getTokenTime(String token) {
-        return 0;
-    }
-
-    @Override
-    public boolean hasToken(String token) {
-        return false;
+        redisTemplate.expire(token, 30, TimeUnit.MINUTES);
     }
 }

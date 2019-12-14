@@ -1,5 +1,7 @@
 package cn.ljlin233.authorization.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,14 @@ public class UserRoleServiceImpl implements UserRoleService {
         UserRole userRole = UserRole.builder().userId(userId).build();
 
         userRoleDao.deleteUserRole(userRole);
+    }
+
+    @Override
+    public List<UserRole> getUserRoleByUserId(int userId) {
+
+        UserRole userRole = UserRole.builder().userId(userId).build();
+
+        return userRoleDao.getUserRole(userRole);
     }
 
 }

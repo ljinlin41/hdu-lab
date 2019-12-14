@@ -16,9 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import cn.ljlin233.authorization.dao.UserTokenDao;
 import cn.ljlin233.authorization.dto.MyUserDetail;
 import cn.ljlin233.authorization.entity.UserToken;
+import cn.ljlin233.authorization.service.UserTokenService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,21 +29,19 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserTokenDao userTokenDao;
 
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
     throws ServletException, IOException {
 
-        // TODO token校验刷新时间
-
         String token = request.getHeader("token");
 
         if (token != null) {
 
-            UserToken userToken = userTokenDao.getUserToken(token);
+            UserToken userToken = userTokenService.getUserToken(token);
 
             if (userToken != null) {
 

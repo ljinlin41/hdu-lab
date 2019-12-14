@@ -48,24 +48,4 @@ public class UserInfoDaoImpl implements UserInfoDao {
     }
 
 
-    @Override
-    public boolean existsEmail(String email) {
-
-        UserInfo userInfo = UserInfo.builder().email(email).build();
-
-        int count = userInfoMapper.selectCount(userInfo);
-
-        return count != 0;
-    }
-
-    @Override
-    public boolean existsPhone(String phone) {
-
-        UserInfo userInfo = UserInfo.builder().phone(phone).build();
-
-        int count = userInfoMapper.selectCount(userInfo);
-
-        return count != 0;
-    }
-
 }
