@@ -59,7 +59,14 @@ public interface AchievementDao {
      */
     void updateAchievement(Achievement achievement);
 
+    /**
+     * 更新成果
+     *
+     * @param achievement achievement
+     * @param example example
+     */
     void updateAchievementByExample(Achievement achievement, Example example);
+
     /**
      * 删除一个成果
      *

@@ -34,13 +34,6 @@ public interface MemberDao {
      */
     Member getMemberById(int id);
 
-    /**
-     * 按用户Id获取成员列表
-     *
-     * @param memberId 用户Id
-     * @return 成员列表
-     */
-    Page<Member> getMembersByMemberId(int memberId);
 
     /**
      * 按部门Id获取成员
@@ -53,12 +46,11 @@ public interface MemberDao {
     Page<Member> getMemberByDepartment(int departmentId, int pageNum, int pageSize);
 
     /**
-     * 获取部门中的教师成员
-     *
-     * @param departmentId 部门id
-     * @return 教师列表
+     * 获取部门成员
+     * @param member 条件
+     * @return 成员列表
      */
-    Page<Member> getTeacherByDepartment(int departmentId);
+    Page<Member> getMemberList(Member member);
 
     /**
      * 根据姓名搜索成员

@@ -63,7 +63,14 @@ public interface JobService {
      */
     void updateJob(UpdateJobRequestDto request);
 
+    /**
+     * 更新nickname
+     *
+     * @param userId userId
+     * @param nickname nickname
+     */
     void updateNickname(int userId, String nickname);
+
     /**
      * 删除一个招聘
      *

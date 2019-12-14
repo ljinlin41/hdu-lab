@@ -61,6 +61,12 @@ public interface AchievementService {
      */
     void updateAchievement(UpdateAchievementRequestDto request);
 
+    /**
+     * 更新nickname
+     *
+     * @param userId userId
+     * @param nickname nickname
+     */
     void updateNickname(int userId, String nickname);
 
     /**

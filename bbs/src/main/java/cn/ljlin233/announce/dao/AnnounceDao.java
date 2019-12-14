@@ -59,7 +59,14 @@ public interface AnnounceDao {
      */
     void updateAnnounce(Announce announce);
 
+    /**
+     * 更新公告
+     *
+     * @param announce announce
+     * @param example example
+     */
     void updateAnnounceByExample(Announce announce, Example example);
+
     /**
      * 删除公告
      *

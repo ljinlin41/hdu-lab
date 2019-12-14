@@ -64,6 +64,12 @@ public interface AwardService {
      */
     void updateAward(UpdateAwardRequestDto request);
 
+    /**
+     * 更新nickname
+     *
+     * @param userId userId
+     * @param name name
+     */
     void updateNickname(int userId, String name);
 
     /**

@@ -1,6 +1,5 @@
 package cn.ljlin233.introduce.service.impl;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -57,7 +56,8 @@ public class ApplyServiceImpl implements ApplyService {
             throw new SystemException("提交入部申请失败", e.getMessage());
         }
 
-        Page<Member> teacherPage = memberDao.getTeacherByDepartment(request.getDepartmentId());
+        Member member = Member.builder().departmentId(request.getDepartmentId()).memberType("teacher").build();
+        Page<Member> teacherPage = memberDao.getMemberList(member);
 
         sendEmailToTeacher(teacherPage.getData());
     }
@@ -89,8 +89,10 @@ public class ApplyServiceImpl implements ApplyService {
     public Page<Apply> getPendingApply(int userId) {
 
         // 首先获取该教师所在的部门
-        Page<Member> memberPage = memberDao.getMembersByMemberId(userId);
-        List<Member> memberList = new ArrayList<>(memberPage.getData());
+        Member memberSelect = Member.builder().memberId(userId).build();
+
+        Page<Member> memberPage = memberDao.getMemberList(memberSelect);
+        List<Member> memberList = memberPage.getData();
 
         Set<Integer> departmentIdSet = memberList.stream().collect(HashSet::new,
             (set, member) -> set.add(member.getDepartmentId()), HashSet::addAll);
@@ -134,7 +136,7 @@ public class ApplyServiceImpl implements ApplyService {
 
         for (Member teacher : teacherList) {
             int teacherId = teacher.getMemberId();
-            UserInfo teacherInfo = userInfoService.getUserInfo(teacherId);
+            UserInfo teacherInfo = userInfoService.getUserInfoByUserId(teacherId);
             String emailAddress = teacherInfo.getEmail();
 
             SimpleMailMessage message = new SimpleMailMessage();

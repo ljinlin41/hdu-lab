@@ -62,7 +62,14 @@ public interface JobDao {
      */
     void updateJob(Job job);
 
+    /**
+     * 更新一个招聘
+     *
+     * @param job job
+     * @param example example
+     */
     void updateJobByExample(Job job, Example example);
+
     /**
      * 删除一个招聘
      *

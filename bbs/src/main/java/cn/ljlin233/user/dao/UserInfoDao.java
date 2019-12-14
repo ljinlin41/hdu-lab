@@ -30,31 +30,13 @@ public interface UserInfoDao {
      */
     void updateUserInfoByPrimaryKey(UserInfo userInfo);
 
+    /**
+     * 获取用户信息
+     * @param userInfo 条件
+     * @return 用户信息
+     */
     UserInfo getOneUserInfo(UserInfo userInfo);
 
-    /**
-     * 根据用户Id获取用户信息
-     *
-     * @param id 用户Id
-     * @return 用户信息
-     */
-    UserInfo getUserInfoById(int id);
-
-    /**
-     * 根据用户账号获取用户信息
-     *
-     * @param account 用户账号
-     * @return 用户信息
-     */
-    UserInfo getUserInfoByAccount(String account);
-
-    /**
-     * 根据用户账户获取用户Id
-     *
-     * @param account 用户账户
-     * @return 用户Id
-     */
-    int getUserIdByAccount(String account);
 
     /**
      * 根据激活码获取用户Id
@@ -63,14 +45,6 @@ public interface UserInfoDao {
      * @return 用户Id
      */
     int getUserIdByActiveId(String activeId);
-
-    /**
-     * 验证账号是否存在
-     *
-     * @param account 账号
-     * @return true or false
-     */
-    boolean existsAccount(String account);
 
     /**
      * 验证邮箱是否存在
@@ -87,13 +61,5 @@ public interface UserInfoDao {
      * @return true or false
      */
     boolean existsPhone(String phone);
-
-    /**
-     * 验证账号是否激活
-     *
-     * @param account 账号
-     * @return true or false
-     */
-    boolean isActive(String account);
 
 }

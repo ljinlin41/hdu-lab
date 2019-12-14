@@ -10,6 +10,13 @@ import cn.ljlin233.util.Page;
  */
 public interface UserOriginDao {
 
+    /**
+     * 按页获取原始账号
+     *
+     * @param pageNum 第N页
+     * @param pageSize 每页大小
+     * @return result
+     */
     Page<UserOrigin> getUserOriginByPage(int pageNum, int pageSize);
 
     /**

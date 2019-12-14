@@ -59,6 +59,12 @@ public interface AwardDao {
      */
     void updateAward(Award award);
 
+    /**
+     * 更新奖项
+     *
+     * @param award award
+     * @param example example
+     */
     void updateAwardByExample(Award award, Example example);
     /**
      * 删除一个奖项

@@ -6,5 +6,11 @@ package cn.ljlin233.user.service;
  */
 public interface UserNicknameService {
 
+    /**
+     * 更新所有表的nickname
+     *
+     * @param userId userId
+     * @param nickname nickname
+     */
     void updateNickname(int userId, String nickname);
 }
