@@ -17,6 +17,10 @@ import cn.ljlin233.introduce.dto.UpdateJobRequestDto;
 import cn.ljlin233.introduce.entity.Job;
 import cn.ljlin233.introduce.service.JobService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * JobController
@@ -24,6 +28,7 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "招聘信息接口")
 public class JobController {
 
     @Autowired
@@ -34,6 +39,7 @@ public class JobController {
      *
      * @return result
      */
+    @ApiOperation(value = "获取招聘信息")
     @GetMapping(value = "/jobs")
     public Page<Job> getAllJobs() {
 
@@ -46,7 +52,9 @@ public class JobController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/jobs", params = "page")
+    @ApiOperation(value = "按页获取所有招聘信息")
+    @ApiImplicitParam(name = "page", value = "页数", dataType = "int")
+    @GetMapping(value = "/jobPage", params = "page")
     public Page<Job> getJobsPage(@RequestParam int page) {
 
         return jobService.getJobsPage(page, 10);
@@ -59,7 +67,10 @@ public class JobController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/jobs", params = {"search", "page"})
+    @ApiOperation(value = "按标题搜索招聘信息")
+    @ApiImplicitParams({@ApiImplicitParam(name = "search", value = "搜索标题", dataType = "String"),
+        @ApiImplicitParam(name = "page", value = "页数", dataType = "int")})
+    @GetMapping(value = "/searchJob", params = {"search", "page"})
     public Page<Job> searchJobs(@RequestParam String search, @RequestParam int page) {
 
         return jobService.searchJobs(search, page, 10);
@@ -71,7 +82,9 @@ public class JobController {
      * @param id 招聘id
      * @return result
      */
-    @GetMapping(value = "/jobs", params = "id")
+    @ApiOperation(value = "根据招聘Id获取招聘")
+    @ApiImplicitParam(name = "id", value = "招聘Id", dataType = "int")
+    @GetMapping(value = "/jobId", params = "id")
     public Job getJobsById(@RequestParam int id) {
 
         return jobService.getJobById(id);
@@ -82,7 +95,9 @@ public class JobController {
      *
      * @param request request
      */
-    @PostMapping(value = "/jobs")
+    @ApiOperation(value = "增加一个招聘信息")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertJobRequestDto")
+    @PostMapping(value = "/insertJob")
     @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
     public void addJob(@RequestBody InsertJobRequestDto request) {
 
@@ -94,7 +109,9 @@ public class JobController {
      *
      * @param request request
      */
-    @PutMapping(value = "/jobs")
+    @ApiOperation(value = "更新招聘信息")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateJobRequestDto")
+    @PutMapping(value = "/updateJob")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
     public void updateJob(@RequestBody UpdateJobRequestDto request) {
 
@@ -106,7 +123,9 @@ public class JobController {
      *
      * @param request request
      */
-    @DeleteMapping(value = "/jobs")
+    @ApiOperation(value = "删除招聘信息")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteJobRequestDto")
+    @DeleteMapping(value = "/deleteJob")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
     public void deleteJob(@RequestBody DeleteJobRequestDto request) {
         jobService.deleteJob(request.getJobId());

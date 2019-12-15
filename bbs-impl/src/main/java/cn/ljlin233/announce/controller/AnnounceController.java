@@ -17,6 +17,10 @@ import cn.ljlin233.announce.dto.UpdateAnnounceRequestDto;
 import cn.ljlin233.announce.entity.Announce;
 import cn.ljlin233.announce.service.AnnounceService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * AnnounceController
@@ -24,6 +28,7 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "通知公告接口") // 注意不要带中文，扩展时按钮无效
 public class AnnounceController {
 
     @Autowired
@@ -34,7 +39,8 @@ public class AnnounceController {
      *
      * @return result
      */
-    @GetMapping(value = "/announces")
+    @ApiOperation(value = "获取通知列表")
+    @GetMapping(value = "/announceList")
     public Page<Announce> getAllAnnounce() {
 
         return announceService.getAllAnnounces();
@@ -46,7 +52,9 @@ public class AnnounceController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/announces", params = "page")
+    @ApiOperation(value = "按页获取通知列表")
+    @ApiImplicitParam(name = "page", value = "页数", dataType = "int")
+    @GetMapping(value = "/announcesPage", params = "page")
     public Page<Announce> getAnnouncesByPage(@RequestParam int page) {
 
         return announceService.getAnnouncesByPage(page, 10);
@@ -58,7 +66,9 @@ public class AnnounceController {
      * @param id 通知Id
      * @return result
      */
-    @GetMapping(value = "/announces", params = "id")
+    @ApiOperation(value = "根据通知Id获取通知")
+    @ApiImplicitParam(name = "id", value = "通知Id", dataType = "int")
+    @GetMapping(value = "/announcesId", params = "id")
     public Announce getAnnounceById(@RequestParam int id) {
 
         return announceService.getAnnounceById(id);
@@ -71,7 +81,10 @@ public class AnnounceController {
      * @param page 第N页结果
      * @return result
      */
-    @GetMapping(value = "/announces", params = {"search", "page"})
+    @ApiOperation(value = "按标题搜索通知")
+    @ApiImplicitParams({@ApiImplicitParam(name = "search", value = "搜索标题", dataType = "String"),
+        @ApiImplicitParam(name = "page", value = "页数", dataType = "int")})
+    @GetMapping(value = "/searchAnnounce", params = {"search", "page"})
     public Page<Announce> searchAnnounces(@RequestParam String search, @RequestParam int page) {
 
         return announceService.searchAnnounces(search, page, 10);
@@ -82,7 +95,9 @@ public class AnnounceController {
      *
      * @param request request
      */
-    @PostMapping(value = "/announces")
+    @ApiOperation(value = "添加一个通知")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertAnnounceRequestDto")
+    @PostMapping(value = "/insertAnnounce")
     @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
     public void addAnnounce(@RequestBody InsertAnnounceRequestDto request) {
 
@@ -94,7 +109,9 @@ public class AnnounceController {
      *
      * @param request request
      */
-    @PutMapping(value = "/announces")
+    @ApiOperation(value = "更新一个通知")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateAnnounceRequestDto")
+    @PutMapping(value = "/updateAnnounce")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
     public void updateAnnounce(@RequestBody UpdateAnnounceRequestDto request) {
 
@@ -106,7 +123,9 @@ public class AnnounceController {
      *
      * @param request request
      */
-    @DeleteMapping(value = "/announces")
+    @ApiOperation(value = "删除一个通知")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteAnnounceRequestDto")
+    @DeleteMapping(value = "/deleteAnnounce")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId() == #request.upUserId")
     public void deleteAnnounce(@RequestBody DeleteAnnounceRequestDto request) {
         announceService.deleteAnnounce(request.getAnnounceId());

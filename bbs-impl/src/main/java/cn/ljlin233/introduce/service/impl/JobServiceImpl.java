@@ -65,8 +65,12 @@ public class JobServiceImpl implements JobService {
     @Override
     public Job getJobById(int id) {
         Job result = jobDao.getJobById(id);
-        // 访问次数+1
-        addVisitCount(result);
+
+        if (result != null) {
+
+            // 访问次数+1
+            addVisitCount(result);
+        }
 
         return result;
     }

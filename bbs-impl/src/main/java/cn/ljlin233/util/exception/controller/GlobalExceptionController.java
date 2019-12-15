@@ -70,15 +70,16 @@ public class GlobalExceptionController extends DispatcherServlet {
         return exceptionResponse;
     }
 
-    // @ExceptionHandler(Exception.class)
-    // @ResponseBody
-    // public ExceptionResponse handleAllException(Exception ex) {
-    //     ExceptionResponse exceptionResponse = new ExceptionResponse();
-    //     exceptionResponse.setCode("500");
-    //     exceptionResponse.setMessage("服务器内部错误");
-    //     exceptionResponse.setError(ex.getMessage());
-    //     //ex.printStackTrace();
-    //     return exceptionResponse;
-    // }
+    @ExceptionHandler(Exception.class)
+    @ResponseBody
+    public ExceptionResponse handleAllException(Exception ex) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse();
+        exceptionResponse.setCode("500");
+        exceptionResponse.setMessage("服务器内部错误");
+        exceptionResponse.setError(ex.getMessage());
+
+        ex.printStackTrace();
+        return exceptionResponse;
+    }
 
 }

@@ -16,6 +16,9 @@ import cn.ljlin233.introduce.dto.RejectApplyRequestDto;
 import cn.ljlin233.introduce.entity.Apply;
 import cn.ljlin233.introduce.service.ApplyService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * ApplyController
@@ -23,6 +26,7 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "入部申请接口")
 public class ApplyController {
 
     @Autowired
@@ -34,6 +38,8 @@ public class ApplyController {
      * @param id 申请id
      * @return result
      */
+    @ApiOperation(value = "根据申请id查看申请")
+    @ApiImplicitParam(name = "id", value = "申请id", dataType = "int")
     @PostAuthorize("hasAnyRole('teacher','admin', 'root') or authentication.principal.getUserId == returnObject.userId")
     @GetMapping(value = "/apply/pending", params = "id")
     public Apply getApplyById(@RequestParam int id) {
@@ -47,6 +53,8 @@ public class ApplyController {
      * @param userId 用户Id
      * @return result
      */
+    @ApiOperation(value = "根据用户id查看申请")
+    @ApiImplicitParam(name = "userId", value = "用户id", dataType = "int")
     @PreAuthorize("hasAnyRole('teacher','admin', 'root') or authentication.principal.getUserId == #userId")
     @GetMapping(value = "/apply", params = "userId")
     public Page<Apply> getApplyByUserId(@RequestParam int userId) {
@@ -58,6 +66,8 @@ public class ApplyController {
      * 添加用户申请
      * @param request request
      */
+    @ApiOperation(value = "添加用户申请")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertApplyRequestDto")
     @PreAuthorize("hasAnyRole('student', 'teacher','admin', 'root')")
     @PostMapping(value = "/apply")
     public void addApply(@RequestBody InsertApplyRequestDto request) {
@@ -70,6 +80,8 @@ public class ApplyController {
      * @param teacherId 管理员id
      * @return result
      */
+    @ApiOperation(value = "获取用户未处理的申请，对于管理员")
+    @ApiImplicitParam(name = "teacherId", value = "管理员id", dataType = "int")
     @PreAuthorize("hasAnyRole('teacher','admin', 'root')")
     @GetMapping(value = "/apply/pending", params = "teacherId")
     public Page<Apply> getPendingApply(@RequestParam int teacherId) {
@@ -82,6 +94,8 @@ public class ApplyController {
      *
      * @param request request
      */
+    @ApiOperation(value = "接受入部申请")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "AcceptApplyRequestDto")
     @PreAuthorize("hasAnyRole('teacher','admin', 'root')")
     @PostMapping(value = "/apply/accept")
     public void acceptApply(@RequestBody AcceptApplyRequestDto request) {
@@ -94,6 +108,8 @@ public class ApplyController {
      *
      * @param request request
      */
+    @ApiOperation(value = "拒绝入部申请")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "RejectApplyRequestDto")
     @PreAuthorize("hasAnyRole('teacher','admin', 'root')")
     @PostMapping(value = "/apply/reject")
     public void rejectApply(@RequestBody RejectApplyRequestDto request) {

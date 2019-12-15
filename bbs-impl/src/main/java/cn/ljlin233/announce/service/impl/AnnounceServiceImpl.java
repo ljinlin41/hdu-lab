@@ -44,8 +44,11 @@ public class AnnounceServiceImpl implements AnnounceService {
     @Override
     public Announce getAnnounceById(int id) {
         Announce announce = announceDao.getAnnounceById(id);
-        // 增加一个浏览记录
-        addVisitCount(announce);
+
+        if (announce != null) {
+            // 增加一个浏览记录
+            addVisitCount(announce);
+        }
         return announce;
     }
 

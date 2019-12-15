@@ -2,8 +2,10 @@ package cn.ljlin233.authorization.entity;
 
 import java.util.List;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * UserToken
@@ -12,6 +14,8 @@ import lombok.Data;
  */
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserToken {
 
     /**

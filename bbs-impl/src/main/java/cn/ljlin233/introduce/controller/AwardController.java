@@ -17,6 +17,10 @@ import cn.ljlin233.introduce.dto.UpdateAwardRequestDto;
 import cn.ljlin233.introduce.entity.Award;
 import cn.ljlin233.introduce.service.AwardService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * AwardController
@@ -24,6 +28,7 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "荣誉奖项接口")
 public class AwardController {
 
     @Autowired
@@ -32,6 +37,7 @@ public class AwardController {
     /**
      * 获取所有奖项
      */
+    @ApiOperation(value = "获取所有奖项")
     @GetMapping(value = "/awards")
     public Page<Award> getAllAwards() {
 
@@ -44,7 +50,9 @@ public class AwardController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/awards", params = "page")
+    @ApiOperation(value = "按页获取奖项")
+    @ApiImplicitParam(name = "page", value = "页数", dataType = "int")
+    @GetMapping(value = "/awardPage", params = "page")
     public Page<Award> getAwardsByPage(@RequestParam int page) {
 
         return awardService.getAwardsPage(page, 10);
@@ -57,7 +65,10 @@ public class AwardController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/awards", params = {"search", "page"})
+    @ApiOperation(value = "按标题搜索奖项")
+    @ApiImplicitParams({@ApiImplicitParam(name = "search", value = "搜索标题", dataType = "String"),
+        @ApiImplicitParam(name = "page", value = "页数", dataType = "int")})
+    @GetMapping(value = "/searchAward", params = {"search", "page"})
     public Page<Award> searchAwards(@RequestParam String search, @RequestParam int page) {
 
         return awardService.searchAwards(search, page, 10);
@@ -69,7 +80,9 @@ public class AwardController {
      * @param id 奖项id
      * @return result
      */
-    @GetMapping(value = "/awards", params = "id")
+    @ApiOperation(value = "根据奖项Id获取奖项")
+    @ApiImplicitParam(name = "id", value = "奖项Id", dataType = "int")
+    @GetMapping(value = "/awardId", params = "id")
     public Award getAchievementsById(@RequestParam int id) {
 
         return awardService.getAwardById(id);
@@ -80,7 +93,9 @@ public class AwardController {
      *
      * @param request request
      */
-    @PostMapping(value = "/awards")
+    @ApiOperation(value = "增加一个奖项")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertAwardRequestDto")
+    @PostMapping(value = "/insertAward")
     @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
     public void addAward(@RequestBody InsertAwardRequestDto request) {
 
@@ -92,7 +107,9 @@ public class AwardController {
      *
      * @param request request
      */
-    @PutMapping(value = "/awards")
+    @ApiOperation(value = "更新一个奖项")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateAwardRequestDto")
+    @PutMapping(value = "/updateAward")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
     public void updateAward(@RequestBody UpdateAwardRequestDto request) {
 
@@ -104,7 +121,9 @@ public class AwardController {
      *
      * @param request request
      */
-    @DeleteMapping(value = "/awards")
+    @ApiOperation(value = "删除一个奖项")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteAwardRequestDto")
+    @DeleteMapping(value = "/deleteAward")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
     public void deleteAchievement(@RequestBody DeleteAwardRequestDto request) {
 

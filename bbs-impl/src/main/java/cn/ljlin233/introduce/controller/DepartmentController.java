@@ -17,6 +17,10 @@ import cn.ljlin233.introduce.dto.UpdateDepartmentRequestDto;
 import cn.ljlin233.introduce.entity.Department;
 import cn.ljlin233.introduce.service.DepartmentService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * DepartmentController
@@ -24,12 +28,19 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "部门信息接口")
 public class DepartmentController {
 
 
     @Autowired
     private DepartmentService departmentService;
 
+    /**
+     * 获取所有部门
+     *
+     * @return result
+     */
+    @ApiOperation(value = "获取所有部门")
     @GetMapping(value = "/departments")
     public Page<Department> getAllDepartments() {
 
@@ -42,7 +53,9 @@ public class DepartmentController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/departments", params = "page")
+    @ApiOperation(value = "按页获取部门")
+    @ApiImplicitParam(name = "page", value = "页数", dataType = "int")
+    @GetMapping(value = "/departmentPage", params = "page")
     public Page<Department> getDepartmentsByPage(@RequestParam int page) {
 
         return departmentService.getDepartmentsPage(page, 10);
@@ -54,7 +67,9 @@ public class DepartmentController {
      * @param id 部门Id
      * @return result
      */
-    @GetMapping(value = "/departments", params = "id")
+    @ApiOperation(value = "根据部门Id获取部门")
+    @ApiImplicitParam(name = "id", value = "部门Id", dataType = "int")
+    @GetMapping(value = "/departmentId", params = "id")
     public Department getDepartmentsById(@RequestParam int id) {
 
         return departmentService.getDepartmentById(id);
@@ -67,7 +82,10 @@ public class DepartmentController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/departments", params = {"search", "page"})
+    @ApiOperation(value = "按标题搜索部门")
+    @ApiImplicitParams({@ApiImplicitParam(name = "search", value = "搜索名称", dataType = "String"),
+        @ApiImplicitParam(name = "page", value = "页数", dataType = "int")})
+    @GetMapping(value = "/searchDepartment", params = {"search", "page"})
     public Page<Department> searchDepartments(@RequestParam String search, @RequestParam int page) {
 
         return departmentService.searchDepartments(search, page, 10);
@@ -78,8 +96,10 @@ public class DepartmentController {
      *
      * @param request request
      */
+    @ApiOperation(value = "增加一个部门")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertDepartmentRequestDto")
     @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
-    @PostMapping(value = "/departments")
+    @PostMapping(value = "/insertDepartment")
     public void addDepartment(@RequestBody InsertDepartmentRequestDto request) {
 
         departmentService.addDepartment(request);
@@ -90,8 +110,10 @@ public class DepartmentController {
      *
      * @param request request
      */
+    @ApiOperation(value = "修改部门信息")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateDepartmentRequestDto")
     @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
-    @PutMapping(value = "/departments")
+    @PutMapping(value = "/updateDepartment")
     public void updateDepartments(@RequestBody UpdateDepartmentRequestDto request) {
 
         departmentService.updateDepartment(request);
@@ -102,8 +124,10 @@ public class DepartmentController {
      *
      * @param request request
      */
+    @ApiOperation(value = "删除一个部门")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteDepartmentRequestDto")
     @PreAuthorize("hasAnyRole('teacher' , 'admin', 'root')")
-    @DeleteMapping(value = "/departments")
+    @DeleteMapping(value = "/deleteDepartment")
     public void deleteDepartments(@RequestBody DeleteDepartmentRequestDto request) {
 
         departmentService.deleteDepartment(request.getId());

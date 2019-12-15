@@ -14,6 +14,9 @@ import cn.ljlin233.user.dto.DeleteUserInfoRequestDto;
 import cn.ljlin233.user.dto.UpdateUserInfoRequestDto;
 import cn.ljlin233.user.entity.UserInfo;
 import cn.ljlin233.user.service.UserInfoService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * UserInfoController
@@ -21,6 +24,7 @@ import cn.ljlin233.user.service.UserInfoService;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "用户信息接口")
 public class UserInfoController {
 
     @Autowired
@@ -32,8 +36,10 @@ public class UserInfoController {
      * @param id 用户id
      * @return result
      */
+    @ApiOperation(value = "根据用户id获取用户信息")
+    @ApiImplicitParam(name = "id", value = "用户id", dataType = "int")
     @PreAuthorize("hasAnyRole('teacher', 'admin', 'root') or authentication.principal.getUserId == #id")
-    @GetMapping(value = "/user", params = "id")
+    @GetMapping(value = "/userId", params = "id")
     public UserInfo getUserInfo(@RequestParam int id) {
 
         return userInfoService.getUserInfoByUserId(id);
@@ -43,8 +49,10 @@ public class UserInfoController {
      * 更新用户信息
      * @param request request
      */
+    @ApiOperation(value = "更新用户信息")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateUserInfoRequestDto")
     @PreAuthorize("authentication.principal.getUserId == #request.id")
-    @PutMapping(value = "/user")
+    @PutMapping(value = "/updateUser")
     public void updateUserInfo(@RequestBody UpdateUserInfoRequestDto request) {
 
         userInfoService.updateUserInfo(request);
@@ -54,8 +62,10 @@ public class UserInfoController {
      * 删除用户
      * @param request request
      */
+    @ApiOperation(value = "删除用户")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteUserInfoRequestDto")
     @PreAuthorize("authentication.principal.getUserId == #request.id")
-    @DeleteMapping(value = "/user")
+    @DeleteMapping(value = "/deleteUser")
     public void deleteUser(@RequestBody DeleteUserInfoRequestDto request) {
 
         userInfoService.deleteUser(request.getId());

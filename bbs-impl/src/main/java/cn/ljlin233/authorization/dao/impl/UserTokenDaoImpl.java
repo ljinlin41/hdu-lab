@@ -27,7 +27,9 @@ public class UserTokenDaoImpl implements UserTokenDao {
     @Override
     public UserToken getUserToken(String token) {
 
-        return (UserToken) redisTemplate.opsForValue().get(token);
+        Object object = redisTemplate.opsForValue().get(token);
+
+        return (UserToken) object;
     }
 
 

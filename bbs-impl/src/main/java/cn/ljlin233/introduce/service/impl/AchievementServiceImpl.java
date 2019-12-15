@@ -60,8 +60,11 @@ public class AchievementServiceImpl implements AchievementService {
     @Override
     public Achievement getAchievementById(int id) {
         Achievement result = achievementDao.getAchievementById(id);
-        // 访问次数+1
-        addVisitCount(result);
+
+        if (result != null) {
+            // 访问次数+1
+            addVisitCount(result);
+        }
 
         return result;
     }

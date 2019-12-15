@@ -1,7 +1,5 @@
 package cn.ljlin233.announce.dao.impl;
 
-import java.time.LocalDateTime;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +47,10 @@ public class AnnounceDaoImplTest {
 
         Announce announce = announceDao.getAnnounceById(2);
 
-        log.info(announce.toString());
+        if (announce != null) {
+            log.info(announce.toString());
+        }
+
     }
 
     @Test
@@ -67,9 +68,7 @@ public class AnnounceDaoImplTest {
             .title("123")
             .content("123")
             .upUserId(111)
-            .savePath("111111")
-            .upUserNickname("hhhhh")
-            .upDate(DateUtil.getInstance().format(LocalDateTime.now()))
+            .savePath("111111").upUserNickname("hhhhh").upDate(DateUtil.getNow())
             .build();
 
         announceDao.addAnnounce(announce);
@@ -82,14 +81,16 @@ public class AnnounceDaoImplTest {
             .id(4)
             .title("123")
             .content("123")
-            .upUserId(111)
-            .upUserNickname("123")
-            .upDate(DateUtil.getInstance().format(LocalDateTime.now()))
+            .upUserId(111).upUserNickname("123").upDate(DateUtil.getNow())
             .visitCount(1)
             .build();
 
         announceDao.updateAnnounce(announce);
     }
 
+    @Test
+    public void test() {
+        new Announce();
+    }
 
 }

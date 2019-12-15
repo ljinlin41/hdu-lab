@@ -23,7 +23,6 @@ public class UserContextUtil {
     }
 
     public static void removeUserContext() {
-        log.info("删除用户: " + getUserContext());
         userContextThreadLocal.remove();
     }
 }

@@ -17,11 +17,11 @@ public class DateUtil {
         private static final DateTimeFormatter INSTANCE = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     }
 
-    public static DateTimeFormatter getInstance() {
+    private static DateTimeFormatter getInstance() {
         return DateUtilHolder.INSTANCE;
     }
 
-    public static String getNow() {
+    public static synchronized String getNow() {
 
         return getInstance().format(LocalDateTime.now());
     }

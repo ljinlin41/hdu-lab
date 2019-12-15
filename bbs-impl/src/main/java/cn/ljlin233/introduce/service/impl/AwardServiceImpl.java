@@ -43,8 +43,11 @@ public class AwardServiceImpl implements AwardService {
     public Award getAwardById(int id) {
 
         Award result = awardDao.getAwardById(id);
-        // 访问次数+1
-        addVisitCount(result);
+
+        if (result != null) {
+            // 访问次数+1
+            addVisitCount(result);
+        }
 
         return result;
     }

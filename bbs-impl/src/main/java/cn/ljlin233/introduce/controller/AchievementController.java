@@ -17,6 +17,10 @@ import cn.ljlin233.introduce.dto.UpdateAchievementRequestDto;
 import cn.ljlin233.introduce.entity.Achievement;
 import cn.ljlin233.introduce.service.AchievementService;
 import cn.ljlin233.util.Page;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * AchievementController
@@ -24,6 +28,7 @@ import cn.ljlin233.util.Page;
  */
 @RestController
 @RequestMapping("/api")
+@Api(tags = "研究成果接口")
 public class AchievementController {
 
     @Autowired
@@ -34,7 +39,8 @@ public class AchievementController {
      *
      * @return result
      */
-    @GetMapping(value = "/achievements")
+    @ApiOperation(value = "获取成就列表")
+    @GetMapping(value = "/achievementList")
     public Page<Achievement> getAllAchievements() {
 
         return achievementService.getAllAchievements();
@@ -46,7 +52,9 @@ public class AchievementController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/achievements", params = "page")
+    @ApiOperation(value = "按页获取成就列表")
+    @ApiImplicitParam(name = "page", value = "页数", dataType = "int")
+    @GetMapping(value = "/achievementPage", params = "page")
     public Page<Achievement> getAchievementsPage(@RequestParam int page) {
 
         return achievementService.getAchievementsPage(page, 10);
@@ -55,7 +63,9 @@ public class AchievementController {
     /**
      * 增加一个成就
      */
-    @PostMapping(value = "/achievements")
+    @ApiOperation(value = "增加一个成就")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "InsertAchievementRequestDto")
+    @PostMapping(value = "/insertAchievement")
     @PreAuthorize("hasAnyRole('teacher', 'admin', 'root')")
     public void addAchievement(@RequestBody InsertAchievementRequestDto request) {
 
@@ -69,7 +79,10 @@ public class AchievementController {
      * @param page 第N页
      * @return result
      */
-    @GetMapping(value = "/achievements", params = {"search", "page"})
+    @ApiOperation(value = "按标题搜索成就")
+    @ApiImplicitParams({@ApiImplicitParam(name = "search", value = "搜索标题", dataType = "String"),
+        @ApiImplicitParam(name = "page", value = "页数", dataType = "int")})
+    @GetMapping(value = "/searchAchievement", params = {"search", "page"})
     public Page<Achievement> searchAchievements(@RequestParam String search, @RequestParam int page) {
 
         return achievementService.searchAchievements(search, page, 10);
@@ -81,7 +94,9 @@ public class AchievementController {
      * @param id id
      * @return result
      */
-    @GetMapping(value = "/achievements", params = "id")
+    @ApiOperation(value = "根据成就Id获取成就")
+    @ApiImplicitParam(name = "id", value = "成就Id", dataType = "int")
+    @GetMapping(value = "/achievementId", params = "id")
     public Achievement getAchievementsById(@RequestParam int id) {
 
         return achievementService.getAchievementById(id);
@@ -90,7 +105,9 @@ public class AchievementController {
     /**
      * 更新成就
      */
-    @PutMapping(value = "/achievements")
+    @ApiOperation(value = "更新一个成就")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "UpdateAchievementRequestDto")
+    @PutMapping(value = "/updateAchievement")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
     public void updateAchievement(@RequestBody UpdateAchievementRequestDto request) {
 
@@ -102,7 +119,9 @@ public class AchievementController {
      *
      * @param request 请求
      */
-    @DeleteMapping(value = "/achievements")
+    @ApiOperation(value = "删除一个成就")
+    @ApiImplicitParam(name = "request", value = "请求", dataType = "DeleteAchievementRequestDto")
+    @DeleteMapping(value = "/deleteAchievement")
     @PreAuthorize("hasAnyRole('admin', 'root') or authentication.principal.getUserId == #request.upUserId")
     public void deleteAchievement(@RequestBody DeleteAchievementRequestDto request) {
         achievementService.deleteAchievement(request.getAchievementId());

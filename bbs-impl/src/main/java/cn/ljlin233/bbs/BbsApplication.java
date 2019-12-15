@@ -10,7 +10,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @author lvjinlin42@foxmail.com
  */
 @SpringBootApplication(scanBasePackages = {"cn.ljlin233.*"})
-@MapperScan(basePackages = {"cn.ljlin233.*"})
+@MapperScan(basePackages = {"cn.ljlin233.**.mapper"})
 @ServletComponentScan(basePackages = "cn.ljlin233.config")
 public class BbsApplication {
 
